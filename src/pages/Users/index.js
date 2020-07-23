@@ -1,209 +1,167 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { Link } from 'react-router-dom';
+
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { AllCommunityModules } from '@ag-grid-community/all-modules';
+
+import { Overlay, AddButton } from './styles';
 import api from '../../services/api';
-
 import Header from '../../components/Header';
-import { Overlay , Item, UserList  } from './styles';
-
-import ModalAdd from '../../components/ModalAdd';
+import ModalCliente from '../../components/ModalCliente';
+import { FaPlus } from "react-icons/fa";
+import { format } from 'date-fns';
 
 export default function Users() {
 
-    const [user, setUser] = useState([]);
-    const [idClick, setIdClick] = useState(1);
-    
-    const [checkBox, setCheckBox] = useState(false);
-    const [filter, setFilter] = useState('');
+  const [overlay, setOverlay] = useState(false);
+  const [addModal, setAddModal] = useState(false);
+
+  const [confirmAdd, setConfirmAdd] = useState(false);
+
+  const [user, setUser] = useState([] | null);
+  const [idClick, setIdClick] = useState(1);
+
+  const [filter, setFilter] = useState('');
 
 
-    const [overlay, setOverlay] = useState(false);
-    const [addModal, setAddModal] = useState(false);
+  const toggleOverlay = useCallback(() => {
+    setOverlay(!overlay)
+  }, [overlay]);
 
-    const [newName, setNewName] = useState('');
-    const [newFone, setNewFone] = useState('');
-    const [newCPFCNPJ, setNewCPFCNPJ] = useState('');
+  const toggleModalCliente = useCallback(() => {
+    toggleOverlay()
+    setAddModal(!addModal)
+  }, [addModal, toggleOverlay]);
 
-    
-    const [newDataCad, setNewDataCad] = useState('');
-    const [newDataNasc, setNewDataNasc] = useState('');
-    const [newCep, setNewCep] = useState('');
+  const modules = AllCommunityModules
 
-    const [newEndereco, setNewEndereco] = useState('');
-    const [newBairro, setNewBairro] = useState('');
-    const [newCidade, setNewCidade] = useState('');
-    const [newUF, setNewUF] = useState('');
+  useEffect(() => {
+    async function loadUsers() {
+      const response = await api.get('v1/cadastro')
+      setUser(response.data.retorno)
 
+    }
+    loadUsers();
+  }, [confirmAdd, idClick])
 
-    useEffect(() => {
-        async function loadUsers() {
-          const response = await api.get('v1/cadastro')
-          setUser(response.data.retorno)
-        }
-        loadUsers();
-      }, [idClick])
+  const rowData = user
 
-      function toggleCheckBox() {
-        setCheckBox(!checkBox)
-      }
+  const formatar = (params) => {
+    const { value } = params;
+    const data = new Date(value.substring(0, 10));
+    const dateFormatted = format(data, 'dd/MM/yyyy');
+    return dateFormatted;
+  }
 
-
-      const toggleOverlay = useCallback(() => {
-        setOverlay(!overlay)
-      }, [overlay]);
+  function updateStateAdd() {
+    setConfirmAdd(!confirmAdd);
+  }
 
 
-      const toggleModalAdd = useCallback(() => {
-        toggleOverlay()
-        setAddModal(!addModal)
-      }, [addModal, toggleOverlay]);
-
-
-  return(
-    <>
-    <Header
-            filterValue={filter}
-            onChangeFilterValue={(e) => setFilter(e.target.value)}
-            onToggleCheckBox={toggleCheckBox}
-            onToggleModalAdd={toggleModalAdd}
-    />
-
-    <UserList>
+  const columns = [
 
     {
+      headerName: 'ID', field: 'CLI_ID', checkboxSelection: true,
+    },
+    {
+      headerName: 'Nome', field: 'CLI_NOME', flex: 1
+    },
+    {
+      headerName: 'CPF', field: 'CLI_CNPJ_CPF', flex: 1
+    },
+    {
+      headerName: 'Fone', field: 'CLI_FONE', flex: 1
+    },
+    {
+      headerName: 'Data de Cadastro',
+      field: 'CLI_DATACAD',
+      valueFormatter: formatar,
+      flex: 1
+    },
+    {
+      headerName: 'Data de Nascimento', field: 'CLI_DATANASC',
+      valueFormatter: formatar,
+      flex: 1
+    }
+  ]
 
-    filter.trim() ?
+  const defaultColDef = {
+    sortable: true,
+    editable: true,
+    filter: true,
+    floatingFilter: true,
+    flex: 1,
+  }
 
-        checkBox ?
+  let gridApi;
+  let gridColumnApi;
 
-    user.filter(user => (user.CLI_CNPJ_CPF.toLowerCase().includes(filter.toLowerCase().trim())))
-        .map(user => (
-        <>
-        <Item >
-        
-        <h2> Nome:  {user.CLI_NOME}</h2>
-        <p> <strong> CNPJ/CPF: </strong>  {user.CLI_CNPJ_CPF}</p>
-        <p> <strong> Data de Cadastro: </strong>  {user.CLI_DATACAD}</p>
-        <p> <strong> Dada de Nascimento: </strong>  {user.CLI_DATANASC}</p>
-        <p> <strong> Fone: </strong>  {user.CLI_FONE}</p>
+  const onGridReady = params => {
+    gridApi = params.api;
+    gridColumnApi = params.columnApi;
+  }
 
-        <h2>Endereços</h2>
+  const onSelectionChanged = (params) => {
+    gridApi = params.api;
+    gridColumnApi = params.columnApi;
 
-        <UserList>
-            {
-                user.CLIENTE_E.map( endereco => 
-                <div>
-                <div>
-                    <h4> <strong> Endereço do Tipo: </strong>  {endereco.CLIE_TIPO}</h4>
-                    <p> <strong> CEP: </strong> {endereco.CLIE_CEP}</p>
-                    <p> <strong> Endereço: </strong> {endereco.CLIE_ENDERECO}</p>
-                    <p> <strong> Bairro: </strong> {endereco.CLIE_BAIRRO}</p>
-                    <p> <strong>Cidade: </strong> {endereco.CLIE_CIDADE}</p>
-                    <p> <strong>UF: </strong> {endereco.CLIE_UF}</p>
-                </div>       
-                </div>
-                )
-            }
-        </UserList>
-    </Item>
-        </>
-        ))
+    const selectedRows = gridApi.getSelectedRows();
+    console.log(selectedRows)
 
-  :
+  };
 
-  user.filter(user => (user.CLI_NOME.toLowerCase().startsWith(filter.toLowerCase().trim())))
-    .map(user => (
-      <>
-        <Item >
-    
-    <h2> Nome:  {user.CLI_NOME}</h2>
-    <p> <strong> CNPJ/CPF: </strong>  {user.CLI_CNPJ_CPF}</p>
-    <p> <strong> Data de Cadastro: </strong>  {user.CLI_DATACAD}</p>
-    <p> <strong> Dada de Nascimento: </strong>  {user.CLI_DATANASC}</p>
-    <p> <strong> Fone: </strong>  {user.CLI_FONE}</p>
+  return (
+    <>
+      <Header
+        filterValue={filter}
+        onChangeFilterValue={(e) => setFilter(e.target.value)}
+      >Clientes
+      </Header>
 
-    <h2>Endereços</h2>
+      <div style={{ marginTop: '-25px' }} >
+        <Link style={{ textDecoration: 'none' }} to="/cadastro">
+          <AddButton >
+            <FaPlus color='#4E2A77' size='23px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+            <span>Novo Cliente</span>
+          </AddButton>
+        </Link>
+      </div>
 
-    <UserList>
-        {
-            user.CLIENTE_E.map( endereco => 
-            <div>
-            <div>
-                <h4> <strong> Endereço do Tipo: </strong>  {endereco.CLIE_TIPO}</h4>
-                <p> <strong> CEP: </strong> {endereco.CLIE_CEP}</p>
-                <p> <strong> Endereço: </strong> {endereco.CLIE_ENDERECO}</p>
-                <p> <strong> Bairro: </strong> {endereco.CLIE_BAIRRO}</p>
-                <p> <strong>Cidade: </strong> {endereco.CLIE_CIDADE}</p>
-                <p> <strong>UF: </strong> {endereco.CLIE_UF}</p>
-            </div>       
-            </div>
-            )
-        }
-    </UserList>
-  </Item>
-      </>
-    ))
-:
+      <div
+        className="ag-theme-alpine"
+        style={{
+          height: '800px',
+          width: '100%',
+        }}
+      >
+        <AgGridReact
+          modules={modules}
+          columnDefs={columns}
+          rowData={rowData}
+          defaultColDef={defaultColDef}
+          onGridReady={onGridReady}
+          rowSelection='single'
+          rowDeselection='true'
+          onSelectionChanged={onSelectionChanged}
+        >
+        </AgGridReact>
 
-user.map(user => (
-  <>
-     <Item >
-    
-    <h2> Nome:  {user.CLI_NOME}</h2>
-    <p> <strong> CNPJ/CPF: </strong>  {user.CLI_CNPJ_CPF}</p>
-    <p> <strong> Data de Cadastro: </strong>  {user.CLI_DATACAD}</p>
-    <p> <strong> Dada de Nascimento: </strong>  {user.CLI_DATANASC}</p>
-    <p> <strong> Fone: </strong>  {user.CLI_FONE}</p>
+      </div>
 
-    <h2>Endereços</h2>
-
-    <UserList>
-        {
-            user.CLIENTE_E.map( endereco => 
-            <div>
-            <div>
-                <h4> <strong> Endereço do Tipo: </strong>  {endereco.CLIE_TIPO}</h4>
-                <p> <strong> CEP: </strong> {endereco.CLIE_CEP}</p>
-                <p> <strong> Endereço: </strong> {endereco.CLIE_ENDERECO}</p>
-                <p> <strong> Bairro: </strong> {endereco.CLIE_BAIRRO}</p>
-                <p> <strong>Cidade: </strong> {endereco.CLIE_CIDADE}</p>
-                <p> <strong>UF: </strong> {endereco.CLIE_UF}</p>
-            </div>       
-            </div>
-            )
-        }
-    </UserList>
-  </Item>
-  </>
-))
-}
-
-</UserList>
-
-{
+      {
         overlay && addModal ?
           <>
             <Overlay>
-              <ModalAdd
-                onAddModal={toggleModalAdd}
-                onChangeName={e => setNewName(e.target.value)}
-                onChangeFone={e => setNewFone(e.target.value)}
-                onChangeCPFCNPJ={e => setNewCPFCNPJ(e.target.value)}
-                onChangeDataCad={e => setNewDataCad(e.target.value)}
-                onChangeDataNasc={e => setNewDataNasc(e.target.value)}
-
-                onChangeCep={e => setNewCep(e.target.value)}
-                onChangeEndereco={e => setNewEndereco(e.target.value)}
-                onChangeBairro={e => setNewBairro(e.target.value)}
-                onChangeCidade={e => setNewCidade(e.target.value)}
-                onChangeUF={e => setNewUF(e.target.value)}
-
+              <ModalCliente
+                onToggleModalCliente={toggleModalCliente}
+                onConfirmAdd={updateStateAdd}
               />
             </Overlay>
           </>
           : <></>
       }
-
-
-</>
-
-);
+    </>
+  );
 }

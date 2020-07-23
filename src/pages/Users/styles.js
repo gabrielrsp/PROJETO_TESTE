@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-
-
 export const Overlay = styled.div`
 position: fixed;
 display: flex;
@@ -11,47 +9,43 @@ top: 0;
 left: 0;
 right: 0;
 bottom: 0;
-background-color: rgba(0,0,0,0.5);
+background-color: rgba(0,0,0,0.7);
 z-index: 1;
 flex-direction: column;
 `;
 
 
-export const UserList = styled.ul`
 
-    list-style-type: none;
-`;
+export const AddButton = styled.button`
 
-export const Item = styled.li`
-  width: 100%;
-  align-content: center;
-  padding: 5px 15px 10px;
-  margin-bottom: 15px;
-    background: rgba(240,240,240,9);
-  border: 0;
-  text-decoration: none;
-  border-radius: 5px;
+  display: flex;
+  background:  transparent;
+  margin-left: 20px;
+  height:  36px;
+  border:  2px solid #4E2A77;
+  border-radius: 30px;
+  text-align:  center;
+  width:  150px;
+  font-size:  16px;
+  color:  #4E2A77;
+  margin-bottom: 20px;
+
+  span {
+    display: flex;
+    align-self: center;
+    margin: auto;
+    margin-left: 5px;
+    margin-top: 8px;
+    flex: 1;
+    color: #4E2A77;
+    text-align: center;
+    font-weight: bold;
+  }
 
   &:hover {
-  background: rgba(225,225,225,9);
-    transition: 0.33s;
+    background: #d9d9d9;
   }
-  }
-
-  h2 {
-    margin: 10px 0;
-    list-style-type: none;
-  }
-
-  h4 {
-    margin-top: 10px;
-  }
-
-  .strongBlock {
-    display: inline-block;
-  }
-  strong {
-    margin-bottom: 10px;
-    font-size: 18px;
+  &:active {
+    background: #b3b3b3;
   }
 `;

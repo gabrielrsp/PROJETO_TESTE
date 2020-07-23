@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default createGlobalStyle`
   * {
@@ -15,9 +16,8 @@ export default createGlobalStyle`
     font: 16px Roboto, sans-serif;
   }
   #root {
-    max-width: 960px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0px 20px;
   }
   button {
     cursor: pointer;

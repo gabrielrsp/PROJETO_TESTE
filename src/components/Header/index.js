@@ -1,47 +1,23 @@
 import React from 'react';
 
-import { Container, AddButton, SearchInput, CheckBoxInput } from './styles';
-import { FaPlus, FaSearch, FaUserCircle } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Container } from './styles';
+import logo from '../../assets/logo.svg';
 
-
-export default function Header({ filterValue, onChangeFilterValue, onToggleCheckBox, onToggleModalAdd  }) {
-
-
+export default function Header(props) {
 
   return (
-    <Container>
-      <div>
+    <>
+      <img src={logo} alt="saib" width="135px" style={{ marginTop: '10px', marginLeft: '10px' }} />
+      <Container>
         <div className="contents">
           <div className="title" >
-            <h1>Usuários</h1>
-          </div>
-          <div className="profile" >
-         
-            <Link to="/profile">
-              <FaUserCircle color='#f26532' size={32} />
-            </Link>
-          </div>
-        </div>
-        <div className="control">
-          <div className="inputBar">
-            <FaSearch id='faSearch' />
-            <SearchInput placeholder='Pesquisar' value={filterValue} onChange={onChangeFilterValue} />
-          </div>
-          <div className="searchAddBox">
-            <div className="checkBoxContainer" >
-              <CheckBoxInput type='checkbox'  onClick={onToggleCheckBox}  />
-              <span className="spanCheckBox" >pesquisar por CPF</span>
-            </div>
-            <div>
-              <AddButton className="addButton" onClick={onToggleModalAdd}   >
-                <FaPlus color='#fff' size='25px' />
-                <span>Adicionar</span>
-              </AddButton>
+            <h3>{props.children}</h3>
+            <div style={{ textAlign: '-webkit-center' }} >
+              <hr />
             </div>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }
