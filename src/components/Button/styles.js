@@ -12,6 +12,9 @@ export const Container = styled.button`
   font-size:  14px;
   color:  #4E2A77;
 
+  svg {
+    place-self: center;
+  }
 
   span {
     display: flex;

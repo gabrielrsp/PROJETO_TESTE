@@ -9,11 +9,11 @@ export const InputUnform = styled.input `
     border: 1px solid #a6a6a6;
     border-radius: 5px;
     resize: vertical;
-    width: 90%;
+    width: 100%;
     height: 30px;
     padding: 15px;
     margin-top: 5px;
-    margin-right: 5px;
+
 
 
     &:focus {

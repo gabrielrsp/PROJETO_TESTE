@@ -30,8 +30,6 @@ export default function Cadastro() {
 
   const [endereco, setEndereco] = useState([] | null);
 
-  const [filter, setFilter] = useState('');
-
   const [cpf_cnpj, setCpf_cnpj] = useState('');
   const [fone, setFone] = useState('');
 
@@ -173,9 +171,8 @@ export default function Cadastro() {
 
   return (
     <Container>
+
       <Header
-        filterValue={filter}
-        onChangeFilterValue={(e) => setFilter(e.target.value)}
         onToggleModalEndereco={toggleModalEndereco}>
         Formulário de Cliente
       </Header>
@@ -239,7 +236,7 @@ export default function Cadastro() {
         <hr className="line" />
       </div>
 
-      <div style={{ display: 'flex', marginBottom: '15px', marginLeft: '20px' }}>
+      <div className="group-buttons">
         <Button type="submit" onClick={toggleModalEndereco} >
           <FaPlusCircle color='#4E2A77' size='18px' />
           <span>Novo Endereço</span>

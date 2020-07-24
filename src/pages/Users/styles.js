@@ -14,3 +14,20 @@ z-index: 1;
 flex-direction: column;
 `;
 
+
+
+export const Container = styled.div`
+
+button {
+    margin-right: 10px;
+  }
+
+  .group_buttons {
+     display: flex;
+     margin-bottom: 15px;
+  }
+
+
+`;
+
+

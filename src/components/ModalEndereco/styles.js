@@ -10,29 +10,62 @@ export const Line = styled.hr`
   color: #4E2A77;
 `;
 
-
 export const AddForm = styled(Form)`
 
   @media(max-width: 1316px ) {
     width: 100%;
-    height: 220px;
-
   }
 
   @media(max-width: 900px ) {
     height: 600px;
 
-    #tei{
-      display: block !important;
-      width: inherit;
-
     input {
+        width: 90%;
+      }
+
+    #input-container{
+      display: block !important;
+      align-self: center;
+    }
+    .group_select{
+      display: flex;
+    }
+
+    #responsive-input{
       width: 100%;
-      margin: 0 20px;
-    }
     }
 
+    .wrapper-input {
+      margin-left: 20px;
+      justify-content: flex-start !important;
+  }
 
+  }
+
+  .grayBorder {
+    border: 1px solid rgba(191,191,191,0.8);
+    border-radius: 5px;
+    width: 98%;
+    padding: 10px;
+    padding-top: 0;
+  }
+
+  #flex {
+    display: flex;
+    place-content: center;
+  }
+
+  #input-container {
+    display: flex;
+    place-content: center;
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+
+  .wrapper-input {
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
   }
 
   display: flex;
@@ -42,7 +75,8 @@ export const AddForm = styled(Form)`
   background-color: #fff;
   z-index: 2;
   width: 1300px;
-  height: 220px;
+  max-width: 95%;
+  height: 270px;
   border-radius: 3px;
   margin-top: 30px !important;
   padding-bottom: 40px;
@@ -53,10 +87,9 @@ export const AddForm = styled(Form)`
     margin-bottom: 10px;
   }
 
-
   button {
     align-self: flex-start;
-    margin-left: 20px;
+    margin-left: 10px;
   }
 
   .modalHeader {
@@ -67,7 +100,6 @@ export const AddForm = styled(Form)`
     svg {
       margin-left: auto;
     }
-
   }
 
   span {
@@ -76,7 +108,6 @@ export const AddForm = styled(Form)`
       font-weight: bold;
       font-size: 13px;
     }
-
 
   .spanButton {
     display: flex;
@@ -89,16 +120,16 @@ export const AddForm = styled(Form)`
 
   }
 
-  .identity {
-    display: block;
-    margin-bottom: 0;
+
+  .group_select{
+    display: flex;
+    width: 100%;
   }
 
-  .cep {
-    display: block;
-    margin-bottom: 0;
-
+  .select {
+    margin-right: 10px;
   }
+
 
   h4 {
     font-size: 15px;

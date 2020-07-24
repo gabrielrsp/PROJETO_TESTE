@@ -6,11 +6,11 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
-import { Overlay } from './styles';
+import { Overlay, Container } from './styles';
 import api from '../../services/api';
 import Header from '../../components/Header';
 import ModalCliente from '../../components/ModalCliente';
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSearch, FaEdit, FaExternalLinkAlt } from "react-icons/fa";
 import { format } from 'date-fns';
 
 import Button from '../../components/Button'
@@ -110,7 +110,7 @@ export default function Users() {
     gridColumnApi = params.columnApi;
 
     const selectedRows = gridApi.getSelectedRows();
-    console.log(selectedRows)
+   // console.log(selectedRows)
 
   };
 
@@ -119,23 +119,42 @@ export default function Users() {
       <Header
         filterValue={filter}
         onChangeFilterValue={(e) => setFilter(e.target.value)}
-      >Clientes
+      > Cadastro de Clientes
       </Header>
 
-      <div style={{ marginTop: '-25px' }} >
-        <Link style={{ textDecoration: 'none' }} to="/cadastro">
-          <Button>
+      <Container>
+
+      <div style={{ display: 'flex', marginTop: '-25px', marginBottom: '10px', marginLeft: '20px' }}>
+          <Button onClick={toggleModalCliente}>
             <FaPlus color='#4E2A77' size='18px' />
             <span>Novo Cliente</span>
           </Button>
-        </Link>
+
+          <Button onClick={toggleModalCliente}>
+            <FaExternalLinkAlt color='#4E2A77' size='18px' />
+            <span>Visualizar Informações</span>
+          </Button>
+
+          <Button onClick={toggleModalCliente}>
+            <FaEdit color='#4E2A77' size='18px' />
+            <span>Alterar Cadastro</span>
+          </Button>
+
+          <Button onClick={toggleModalCliente}>
+            <FaSearch color='#4E2A77' size='18px' />
+            <span>Pesquisar Cliente</span>
+          </Button>
+
       </div>
+
+      </Container>
 
       <div
         className="ag-theme-alpine"
         style={{
           height: '800px',
           width: '100%',
+          padding: '10px',
         }}
       >
         <AgGridReact

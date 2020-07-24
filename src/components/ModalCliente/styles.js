@@ -1,159 +1,168 @@
 import styled from 'styled-components';
 import { Form } from '@unform/web';
 
-export const SelectBox = styled.select`
-    font-size: 15px;
-    border: 0;
-    border-radius: 3px;
-    width: 180px !important;
-    height: 34px;
-    background: #e6e6e6; 
-    color: black;
-    font-size: 15px;
-    margin-left: 10px;
-    inline-size: auto;
-    margin: 4px;
 
-       option {
-         color: black;
-         background: white;
-         font-weight: small;
-         display: flex;
-         white-space: pre;
-         min-height: 20px;
-         padding: 0px 2px 1px;
-       }
+export const Overlay = styled.div`
+position: fixed;
+display: flex;
+width: 100%;
+height: 100%;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0,0,0,0.7);
+z-index: 1;
+flex-direction: column;
 `;
 
+export const Container = styled.div`
 
-export const AddForm = styled(Form)`
-@media(max-width: 900px ) {
-  width: 100%;
-  height: 100%;
-  margin: 0 !important;
- }
-  display: flex;
+
+@media(max-width: 1316px ) {
+    width: 100%;
+  }
+
+  @media(max-width: 900px ) {
+    height: 977px;
+
+
+    #wrapper {
+        display: block !important;
+    }
+
+  }
+
+  #wrapper {
+        display: flex;
+    }
+
   align-items: center;
   align-self: center;
   flex-direction: column;
   background-color: #fff;
   z-index: 2;
-  width: 900px;
+  width: 1200px;
   border-radius: 3px;
-  margin-top: 30px !important;
+  max-width: 95%;
 
-  .dates {
-    margin-top: 15px;
-    display: flex;
-    width: -webkit-fill-available;
-    justify-content: space-between;
+
+
+h3 {
+    font-size: 23px;
+    margin-top: 3px;
+    color: #4E2A77;
+    font-weight: normal;
   }
 
-  .form{
-      margin: auto;
-      margin-top: -10px;
-      margin-bottom: 5px;
+
+  h4 {
+    font-size: 18px;
+    color: #999999;
+    margin-left: 20px;
+
+  }
+
+  h5 {
+    font-size: 14px;
+    color: #999999;
+    margin-left: 20px;
+  }
+
+  .line {
+  margin-bottom: 8px;
+  display: block; height: 1px;
+  border: 0; border-top: 1px solid ;
+  color: #999999;
+  margin-top: 5px;
+  max-width: 99.6%;
+  }
+
+  button {
+    margin-right: 10px;
+  }
+
+
+  .grayBorder {
+    border: 1px solid rgba(191,191,191,0.8);
+    border-radius: 5px;
+
+    padding: 8px;
+    padding-top: 25px;
+    margin: 10px;
+
+  }
+
+
+  .modalHeader {
+    display: flex;
+    padding: 20px ;
+    width: 100% ;
+
+    svg {
+      margin-left: auto;
     }
+  }
+
+`;
+
+
+export const ClienteForm = styled(Form)`
+
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
   span {
       color: #e65c00;
       align-self: flex-start;
+      margin-left: 20px;
       font-weight: bold;
       font-size: 13px;
     }
 
 
-  div {
-    align-self: flex-start !important;
-    align-items: center;
-
-   
-
-    .cadastro {
-    display: flex;
-    align-self: flex-start !important;
-    align-items: center;
-    margin: 20px ;
-    margin-bottom: 0;
-
-  }
-
-    .endereco {
-      display: block;
+    .input-wrapper{
+      margin-bottom: 15px;
     }
-
-    .buttons {
-      margin-top: 20px !important;
-      text-align: end;
-    }
- 
-  }
-
 
   input {
 
+    border-radius: 5px;
     display: block;
     background: #fff;
     color: black;
     font-size: 15px;
     border: 1px solid #a6a6a6;
-    border-radius: 2px;
+    border-radius: 5px;
     resize: vertical;
     width: 90%;
     height: 30px;
     padding: 15px;
     margin-top: 5px;
-    margin-left: auto;
-
-   
+    margin-left: 20px;
 
     &:focus {
-      box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-      border: 1px solid rgba(81, 203, 238, 1);
+      box-shadow: 0 0 6px rgba(78,42,119,0.7);
+      border: 1px solid rgba(78,42,119,0.7);
     }
   }
 
-  .identity {
-    display: block;
-    margin-bottom: 0;
-    
-    h4 {
-      margin-left: 8px;
-    }
-
-    .largeInput {
-      width: 380px;
-    }
-
-    .nome {
-      width: 547px;
-    }
-  }
+`;
 
 
-  .datepicker {
-    display: block;
-  }
+export const Line = styled.hr`
 
-  .title {
-    align-self: flex-start ;
-    margin-left: 46px;
-    margin-top: 30px;
-  }
-  h4 {
-    font-size: 15px;
-    margin-top: 5px;
-    color: black;
-  }
-  h3 {
-    font-size: 23px;
-    margin-top: 15px;
-    color: black;
-  }
-  h2 {
-    margin-top: 3px;
-    margin-left: 5px;
-    font-size: 25px;
-    color: black;
-  }
+  margin-bottom: 8px;
+  display: block; height: 1px;
+  border: 0; border-top: 1px solid ;
+  color: #4E2A77;
+  margin-top: 5px;
+  max-width: 98%;
+
+  margin-top: -12px;
+  margin-bottom: 20px;
+
+
+
 `;

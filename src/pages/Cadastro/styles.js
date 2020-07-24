@@ -43,7 +43,14 @@ export const Container = styled.div`
     margin-right: 10px;
   }
 
+  .group_buttons {
+     display: flex;
+     margin-bottom: 15px;
+  }
+
 `;
+
+
 
 
 export const ClienteForm = styled(Form)`

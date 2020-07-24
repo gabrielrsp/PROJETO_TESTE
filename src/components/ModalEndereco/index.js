@@ -57,15 +57,13 @@ export default function ModalEndereco(props) {
     { value: 'TO', label: 'TO' },
   ]
 
-
-
   const customStyles = {
-      control: (base, state) => ({
-          ...base,
-          height: '34px',
-          width: '80px',
-      }
-      ),
+    control: (base, state) => ({
+      ...base,
+      height: '34px',
+      width: '100px',
+    }
+    ),
   };
 
   function customTheme(theme) {
@@ -79,8 +77,7 @@ export default function ModalEndereco(props) {
     }
   }
 
-
-  async function handleSubmit(formData) {
+  async function handleSubmitEndereco(formData) {
     try {
 
       formRef.current.setErrors({});
@@ -115,11 +112,12 @@ export default function ModalEndereco(props) {
         ]
       }
 
-      console.log(endereco)
+      props.returnEndereco(endereco);
+      props.onToggleModalEndereco();
 
       /*
       const response = await api.put('/v1/cadastro', endereco);
-      props.onToggleModalEndereco()
+
       props.onConfirmAdd();
       props.onAddEndereco(formData);
       console.log(response);
@@ -140,85 +138,104 @@ export default function ModalEndereco(props) {
   return (
 
     <>
+      <AddForm onSubmit={handleSubmitEndereco} ref={formRef} >
 
-
-
-      <AddForm onSubmit={handleSubmit} ref={formRef} >
-
-      <div className="modalHeader" >
-        <h3>Formulário de Endereço</h3>
-        <FaTimes color='#4E2A77' size='18px' onClick={props.onToggleModalEndereco} />
-      </div>
-      <Line />
-
-        <div id="tei" style={{display: 'flex', marginBottom: '10px'}}>
-
-        <div className="identity" >
-          <h4>Logradouro</h4>
-          <Input
-            name="endereco"
-            className="largeInput"
-            type="text"
-          />
+        <div className="modalHeader" >
+          <h3>Formulário de Endereço</h3>
+          <FaTimes color='#4E2A77' size='20px' onClick={props.onToggleModalEndereco} />
         </div>
+        <Line />
 
-        <div className="identity" >
-          <h4>Bairro</h4>
-          <Input
-            name="bairro"
-            className="largeInput"
-            type="text"
-          />
+        <div className="grayBorder">
+
+          <div id="input-container" style={{ width: '100%' }} >
+
+            <div className="wrapper-input" >
+              <div id="responsive-input" >
+                <h4>Logradouro</h4>
+                <Input
+                  name="endereco"
+                  className="largeInput"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div className="wrapper-input" >
+              <div id="responsive-input" >
+                <div>
+                  <h4>Bairro</h4>
+                  <Input
+                    name="bairro"
+                    className="largeInput"
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="wrapper-input" >
+              <div id="responsive-input" >
+                <h4>CEP</h4>
+                <Input
+                  name="cep"
+                  type="text"
+                  onChange={onChangeCep}
+                  value={cep}
+                />
+              </div>
+            </div>
+
+
+            <div className="wrapper-input" >
+              <div id="responsive-input" >
+                <h4 >Cidade</h4>
+                <Input
+                  className="largeInput"
+                  name="cidade"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div className="wrapper-input" >
+              <div className="group_select" style={{ display: 'flex;' }} >
+
+                <div className="select" >
+                  <h4>UF</h4>
+                  <Select
+                    id="select_uf"
+                    name="uf"
+                    options={uf_options}
+                    theme={customTheme}
+                    styles={customStyles}
+                    placeholder="UF"
+                  />
+                </div>
+
+                <div className="select" >
+                  <h4>Tipo</h4>
+                  <Select
+                    id="select_tipo"
+                    name="tipo_endereco"
+                    options={options}
+                    theme={customTheme}
+                    styles={customStyles}
+                    placeholder="Tipo"
+                  />
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <Button type="submit"  >
+            <FaCheck color='#4E2A77' size='18px' />
+            <span className="spanButton">Adicionar</span>
+          </Button>
+
         </div>
-
-        <div className="cep" >
-          <h4>CEP</h4>
-          <Input
-            name="cep"
-            className="cep"
-            type="text"
-            onChange={onChangeCep}
-            value={cep}
-          />
-        </div>
-
-        <div className="cep" >
-          <h4 >Cidade</h4>
-          <Input
-            className="largeInput"
-            name="cidade"
-            type="text"
-          />
-        </div>
-
-        <div className="identity" >
-        <h4>UF</h4>
-          <Select
-            name="uf"
-            options={uf_options}
-            theme={customTheme}
-            styles={customStyles}
-            placeholder="UF"
-          />
-        </div>
-
-        <div className="identity" >
-          <h4>Tipo</h4>
-          <Select
-            name="tipo_endereco"
-            options={options}
-            theme={customTheme}
-            styles={customStyles}
-            placeholder="Tipo"
-          />
-        </div>
-
-        </div>
-
-        <Button type="submit"  >
-          <FaCheck color='#4E2A77' size='18px' />
-          <span className="spanButton">Adicionar</span>
-        </Button>
 
       </AddForm>
 
