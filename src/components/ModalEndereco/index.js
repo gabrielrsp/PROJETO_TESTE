@@ -2,211 +2,227 @@ import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { mask, unMask } from 'remask';
 
-import { AddForm, AddButton, Line } from './styles';
+import { Container, AddForm, Line } from './styles';
 import Input from '../Input';
 import Select from '../Select'
+import Button from '../Button';
+
+import { FaTimes, FaCheck } from "react-icons/fa";
 
 import api from '../../services/api';
 
 export default function ModalEndereco(props) {
 
-    const [cep, setCep] = useState('');
+  const [cep, setCep] = useState('');
 
-    const onChangeCep = event => {
-        setCep(mask(unMask(formRef.current.getFieldValue('cep')), ['99999-999']));
+  const onChangeCep = event => {
+    setCep(mask(unMask(formRef.current.getFieldValue('cep')), ['99999-999']));
+  }
+
+  const formRef = useRef(null);
+
+  const options = [
+    { value: '1', label: 'Residencial' },
+    { value: '2', label: 'Comercial' },
+    { value: '3', label: 'Alternativo' }
+  ]
+
+  const uf_options = [
+    { value: 'AC', label: 'AC' },
+    { value: 'AL', label: 'AL' },
+    { value: 'AM', label: 'AM' },
+    { value: 'AP', label: 'AP' },
+    { value: 'BA', label: 'BA' },
+    { value: 'CE', label: 'CE' },
+    { value: 'DF', label: 'DF' },
+    { value: 'ES', label: 'ES' },
+    { value: 'GO', label: 'GO' },
+    { value: 'MA', label: 'MA' },
+    { value: 'MT', label: 'MT' },
+    { value: 'MS', label: 'MS' },
+    { value: 'MG', label: 'MG' },
+    { value: 'PA', label: 'PA' },
+    { value: 'PB', label: 'PB' },
+    { value: 'PR', label: 'PR' },
+    { value: 'PE', label: 'PE' },
+    { value: 'PI', label: 'PI' },
+    { value: 'RJ', label: 'RJ' },
+    { value: 'RN', label: 'RN' },
+    { value: 'RO', label: 'RO' },
+    { value: 'RS', label: 'RS' },
+    { value: 'RR', label: 'RR' },
+    { value: 'SC', label: 'SC' },
+    { value: 'SE', label: 'SE' },
+    { value: 'SP', label: 'SP' },
+    { value: 'TO', label: 'TO' },
+  ]
+
+
+
+  const customStyles = {
+      control: (base, state) => ({
+          ...base,
+          height: '34px',
+          width: '80px',
+      }
+      ),
+  };
+
+  function customTheme(theme) {
+    return {
+      ...theme,
+      colors: {
+        ...theme.colors,
+        primary25: 'rgba(189,161,222,0.8)',
+        primary: 'rgba(78,42,119,0.7)',
+      }
     }
+  }
 
-    const formRef = useRef(null);
 
-    const options = [
-        { value: '1', label: 'Residencial' },
-        { value: '2', label: 'Comercial' },
-        { value: '3', label: 'Alternativo' }
-    ]
+  async function handleSubmit(formData) {
+    try {
 
-    const uf_options = [
-        { value: 'Acre', label: 'Acre' },
-        { value: 'Alagoas', label: 'Alagoas' },
-        { value: 'Amapá', label: 'Amapá' },
-        { value: 'Amazonas', label: 'Amazonas' },
-        { value: 'Bahia', label: 'Bahia' },
-        { value: 'Ceará', label: 'Ceará' },
-        { value: 'Espírito Santo', label: 'Espírito Santo' },
-        { value: 'Goiás', label: 'Goiás' },
-        { value: 'Maranhão', label: 'Maranhão' },
-        { value: 'Mato Grosso', label: 'Mato Grosso' },
-        { value: 'Mato Grosso do Sul', label: 'Mato Grosso do Sul' },
-        { value: 'Minas Gerais', label: 'Minas Gerais' },
-        { value: 'Pará', label: 'Pará' },
-        { value: 'Paraíba', label: 'Paraíba' },
-        { value: 'Paraná', label: 'Paraná' },
-        { value: 'Pernambuco', label: 'Pernambuco' },
-        { value: 'Piauí', label: 'Piauí' },
-        { value: 'Rio de Janeiro', label: 'Rio de Janeiro' },
-        { value: 'Rio Grande do Norte', label: 'Rio Grande do Norte' },
-        { value: 'Rio Grande do Sul', label: 'Rio Grande do Sul' },
-        { value: 'Rondônia', label: 'Rondônia' },
-        { value: 'Roraima', label: 'Roraima' },
-        { value: 'São Paulo', label: 'São Paulo' },
-        { value: 'Sergipe', label: 'Sergipe' },
-        { value: 'Tocantins', label: 'Tocantins' },
-    ]
+      formRef.current.setErrors({});
 
-    const customStyles = {
-        control: (base, state) => ({
-            ...base,
-            height: '34px',
-            width: '380px',
+      const schema = Yup.object().shape({
+
+        endereco: Yup.string().required('*Campo Obrigatório'),
+        tipo_endereco: Yup.string().required('*Campo Obrigatório'),
+        bairro: Yup.string().required('*Campo Obrigatório'),
+        cep: Yup.string().required('*Campo Obrigatório'),
+        cidade: Yup.string().required('*Campo Obrigatório'),
+        uf: Yup.string().required('*Campo Obrigatório'),
+
+      });
+
+      await schema.validate(formData, {
+        abortEarly: false,
+      });
+
+      const endereco = {
+        cliente: {},
+        docs: [{
+          CLIE_CLI_ID: 0,
+          CLIE_ID: 0,
+          CLIE_TIPO: formData.tipo_endereco,
+          CLIE_CEP: formData.cep,
+          CLIE_ENDERECO: formData.endereco,
+          CLIE_BAIRRO: formData.bairro,
+          CLIE_CIDADE: formData.cidade,
+          CLIE_UF: formData.uf,
         }
-        ),
-    };
+        ]
+      }
 
+      console.log(endereco)
 
-    async function handleSubmit(formData) {
-        try {
+      /*
+      const response = await api.put('/v1/cadastro', endereco);
+      props.onToggleModalEndereco()
+      props.onConfirmAdd();
+      props.onAddEndereco(formData);
+      console.log(response);
+      */
 
-            formRef.current.setErrors({});
-
-            const schema = Yup.object().shape({
-
-                endereco: Yup.string().required('*Campo Obrigatório'),
-                tipo_endereco: Yup.string().required('*Campo Obrigatório'),
-                bairro: Yup.string().required('*Campo Obrigatório'),
-                cep: Yup.string().required('*Campo Obrigatório'),
-                cidade: Yup.string().required('*Campo Obrigatório'),
-                uf: Yup.string().required('*Campo Obrigatório'),
-
-            });
-
-            await schema.validate(formData, {
-                abortEarly: false,
-            });
-
-            const endereco = {
-                cliente: {},
-                docs: [{
-                    CLIE_CLI_ID: 0,
-                    CLIE_ID: 0,
-                    CLIE_TIPO: formData.tipo_endereco,
-                    CLIE_CEP: formData.cep,
-                    CLIE_ENDERECO: formData.endereco,
-                    CLIE_BAIRRO: formData.bairro,
-                    CLIE_CIDADE: formData.cidade,
-                    CLIE_UF: formData.uf,
-                }
-                ]
-            }
-
-            console.log(endereco)
-
-            /*
-            const response = await api.put('/v1/cadastro', endereco);
-            props.onToggleModalEndereco()
-            props.onConfirmAdd();
-            props.onAddEndereco(formData);
-            console.log(response);
-            */
-
-        }
-        catch (err) {
-            const validationErrors = {};
-            if (err instanceof Yup.ValidationError) {
-                err.inner.forEach(error => {
-                    validationErrors[error.path] = error.message;
-                });
-                formRef.current.setErrors(validationErrors);
-            }
-        }
     }
+    catch (err) {
+      const validationErrors = {};
+      if (err instanceof Yup.ValidationError) {
+        err.inner.forEach(error => {
+          validationErrors[error.path] = error.message;
+        });
+        formRef.current.setErrors(validationErrors);
+      }
+    }
+  }
 
-    return (
-        <AddForm onSubmit={handleSubmit} ref={formRef} >
+  return (
 
-            <div style={{ display: 'flex', margin: '20px' }} >
-                <h3>Formulário de Endereço</h3>
-            </div>
-                <Line/>
-
-            <div style={{ margin: 'auto' }} >
-                <div style={{ display: 'block' }}>
-
-                </div>
-
-                <div className="dates">
-                    <div className="identity" >
-                        <h4 >Endereco</h4>
-                        <Input
-                            name="endereco"
-                            className="largeInput"
-                            type="text"
-                        />
-                    </div>
-
-                    <div className="identity" >
-                        <h4>Tipo </h4>
-                        <Select
-                            name="tipo_endereco"
-                            options={options}
-                            styles={customStyles}
-                            width='200px'
-                        />
-                    </div>
-                </div>
-
-                <div className="dates">
-                    <div className="identity" >
-                        <h4>CEP</h4>
-                        <Input
-                            name="cep"
-                            className="largeInput"
-                            type="text"
-                            onChange={onChangeCep}
-                            value={cep}
-                        />
-                    </div>
-
-                    <div className="identity" >
-                        <h4>Bairro</h4>
-                        <Input
-                            name="bairro"
-                            className="largeInput"
-                            type="text"
-                        />
-                    </div>
-                </div>
-
-                <div className="dates">
-                    <div className="identity" >
-                        <h4 >Cidade</h4>
-                        <Input
-                            className="largeInput"
-                            name="cidade"
-                            type="text"
-                        />
-                    </div>
-
-                    <div className="identity" >
-                        <h4 >UF</h4>
-                        <Select
-                            name="uf"
-                            options={uf_options}
-                            styles={customStyles}
-                        />
-                    </div>
-                </div>
+    <>
 
 
-                <div className="buttons" >
-                    <AddButton type="button" className="addButton" onClick={props.onToggleModalEndereco} >
-                        <span className="addButton" >Cancelar</span>
-                    </AddButton>
-                    <AddButton type="submit" className="addButton" >
-                        <span className="addButton" >Adicionar</span>
-                    </AddButton>
-                </div>
 
-            </div>
+      <AddForm onSubmit={handleSubmit} ref={formRef} >
 
-        </AddForm>
-    );
+      <div className="modalHeader" >
+        <h3>Formulário de Endereço</h3>
+        <FaTimes color='#4E2A77' size='18px' onClick={props.onToggleModalEndereco} />
+      </div>
+      <Line />
+
+        <div id="tei" style={{display: 'flex', marginBottom: '10px'}}>
+
+        <div className="identity" >
+          <h4>Logradouro</h4>
+          <Input
+            name="endereco"
+            className="largeInput"
+            type="text"
+          />
+        </div>
+
+        <div className="identity" >
+          <h4>Bairro</h4>
+          <Input
+            name="bairro"
+            className="largeInput"
+            type="text"
+          />
+        </div>
+
+        <div className="cep" >
+          <h4>CEP</h4>
+          <Input
+            name="cep"
+            className="cep"
+            type="text"
+            onChange={onChangeCep}
+            value={cep}
+          />
+        </div>
+
+        <div className="cep" >
+          <h4 >Cidade</h4>
+          <Input
+            className="largeInput"
+            name="cidade"
+            type="text"
+          />
+        </div>
+
+        <div className="identity" >
+        <h4>UF</h4>
+          <Select
+            name="uf"
+            options={uf_options}
+            theme={customTheme}
+            styles={customStyles}
+            placeholder="UF"
+          />
+        </div>
+
+        <div className="identity" >
+          <h4>Tipo</h4>
+          <Select
+            name="tipo_endereco"
+            options={options}
+            theme={customTheme}
+            styles={customStyles}
+            placeholder="Tipo"
+          />
+        </div>
+
+        </div>
+
+        <Button type="submit"  >
+          <FaCheck color='#4E2A77' size='18px' />
+          <span className="spanButton">Adicionar</span>
+        </Button>
+
+      </AddForm>
+
+    </>
+
+  );
 }

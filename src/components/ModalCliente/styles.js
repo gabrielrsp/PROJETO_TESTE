@@ -26,35 +26,6 @@ export const SelectBox = styled.select`
 `;
 
 
-export const AddButton = styled.button`
-
-    background: #0099cc;
-    margin-bottom: 8px;
-    margin-left: 20px;
-    margin-right: 0;
-
-    border: 0;
-    padding: 5px 10px;
-    border-radius: 3px;
-
-
-    &:hover {
-      background: #0086b3;
-    }
-    &:active {
-      background: #006080;
-    }
-
-    .addButton{
-        color: #fff;
-        flex: 1;
-        text-align: center;
-        font-weight: bold;
-        display: contents;
-        font-size: 20px;
-      }
-`;
-
 export const AddForm = styled(Form)`
 @media(max-width: 900px ) {
   width: 100%;

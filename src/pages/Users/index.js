@@ -6,12 +6,14 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 
-import { Overlay, AddButton } from './styles';
+import { Overlay } from './styles';
 import api from '../../services/api';
 import Header from '../../components/Header';
 import ModalCliente from '../../components/ModalCliente';
 import { FaPlus } from "react-icons/fa";
 import { format } from 'date-fns';
+
+import Button from '../../components/Button'
 
 export default function Users() {
 
@@ -122,10 +124,10 @@ export default function Users() {
 
       <div style={{ marginTop: '-25px' }} >
         <Link style={{ textDecoration: 'none' }} to="/cadastro">
-          <AddButton >
-            <FaPlus color='#4E2A77' size='23px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+          <Button>
+            <FaPlus color='#4E2A77' size='18px' />
             <span>Novo Cliente</span>
-          </AddButton>
+          </Button>
         </Link>
       </div>
 

@@ -6,7 +6,7 @@ import Users from './pages/Users';
 import Cadastro from './pages/Cadastro';
 
 export default function Routes() {
-  return(
+  return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Users} />

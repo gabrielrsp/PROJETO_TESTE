@@ -9,13 +9,14 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import { FaSave, FaPlusCircle, FaTrashAlt, FaEdit } from "react-icons/fa";
 
-import { Overlay, Container, ClienteForm, AddButton } from './styles';
+import { Overlay, Container, ClienteForm } from './styles';
 import DatePicker from '../../components/DatePicker';
 import api from '../../services/api';
 import Header from '../../components/Header';
 import ModalEndereco from '../../components/ModalEndereco';
 import { format } from 'date-fns';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 export default function Cadastro() {
 
@@ -184,10 +185,12 @@ export default function Cadastro() {
         <hr className="line" />
       </div>
 
-      <AddButton type="submit" className="addButton" onClick={handleSubmitCliente} form="my-form" >
-        <FaSave color='#4E2A77' size='18px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+      <div style={{  marginLeft: '20px' }}>
+      <Button type="submit" onClick={handleSubmitCliente} form="my-form" >
+        <FaSave color='#4E2A77' size='18px' />
         <span>Salvar Cadastro</span>
-      </AddButton>
+      </Button>
+      </div>
 
       <ClienteForm onSubmit={handleSubmitCliente} ref={formRef} id="my-form"  >
         <div className="identity" >
@@ -236,23 +239,23 @@ export default function Cadastro() {
         <hr className="line" />
       </div>
 
-      <div style={{display: 'flex'}}>
-        <AddButton type="submit" className="addButton" onClick={toggleModalEndereco} >
-          <FaPlusCircle color='#4E2A77' size='18px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+      <div style={{ display: 'flex', marginBottom: '15px', marginLeft: '20px' }}>
+        <Button type="submit" onClick={toggleModalEndereco} >
+          <FaPlusCircle color='#4E2A77' size='18px' />
           <span>Novo Endereço</span>
-        </AddButton>
+        </Button>
 
 
-        <AddButton type="submit" className="addButton" onClick={toggleModalEndereco} >
-          <FaEdit color='#4E2A77' size='18px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+        <Button type="submit" onClick={toggleModalEndereco} >
+          <FaEdit color='#4E2A77' size='18px' />
           <span>Alterar Endereço</span>
-        </AddButton>
+        </Button>
 
 
-        <AddButton type="submit" className="addButton" onClick={toggleModalEndereco} >
-          <FaTrashAlt color='#4E2A77' size='18px' style={{ alignSelf: 'center', marginLeft: '10px' }} />
+        <Button type="submit" onClick={toggleModalEndereco} >
+          <FaTrashAlt color='#4E2A77' size='18px' />
           <span>Excluir Endereço</span>
-        </AddButton>
+        </Button>
       </div>
 
       <div

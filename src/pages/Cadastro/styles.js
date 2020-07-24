@@ -15,12 +15,13 @@ z-index: 1;
 flex-direction: column;
 `;
 
-export const Container = styled.div` 
+export const Container = styled.div`
 
   h4 {
     font-size: 18px;
     color: #999999;
     margin-left: 20px;
+
   }
 
   h5 {
@@ -38,10 +39,14 @@ export const Container = styled.div`
   max-width: 99%;
   }
 
+  button {
+    margin-right: 10px;
+  }
+
 `;
 
 
-export const ClienteForm = styled(Form)` 
+export const ClienteForm = styled(Form)`
 
   display: flex;
   margin: 40px 0px;
@@ -55,61 +60,27 @@ export const ClienteForm = styled(Form)`
     }
 
   input {
-    
+
     border-radius: 5px;
     display: block;
     background: #fff;
     color: black;
     font-size: 15px;
     border: 1px solid #a6a6a6;
-    border-radius: 2px;
+    border-radius: 5px;
     resize: vertical;
     width: 90%;
     height: 30px;
     padding: 15px;
     margin-top: 5px;
-    margin-right: 10px;
+    margin-right: 5px;
     margin-left: 20px;
 
     &:focus {
-      box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-      border: 1px solid rgba(81, 203, 238, 1);
+      box-shadow: 0 0 6px rgba(78,42,119,0.7);
+      border: 1px solid rgba(78,42,119,0.7);
     }
 
   }
 
-`;
-
-export const AddButton = styled.button`
-
-  display: flex;
-  background:  transparent;
-  margin-left: 20px;
-  height:  34px;
-  border:  2px solid #4E2A77;
-  border-radius: 30px;
-  text-align:  center;
-  width:  160px;
-  font-size:  14px;
-  color:  #4E2A77;
-  margin-bottom: 20px;
-
-  span {
-    display: flex;
-    align-self: center;
-    margin: auto;
-    margin-left: 5px;
-    margin-top: 8px;
-    flex: 1;
-    color: #4E2A77;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  &:hover {
-    background: #d9d9d9;
-  }
-  &:active {
-    background: #b3b3b3;
-  }
 `;

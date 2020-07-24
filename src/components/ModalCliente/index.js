@@ -4,11 +4,13 @@ import { format } from 'date-fns';
 import { mask, unMask } from 'remask';
 import { FaPlus } from "react-icons/fa";
 
-import { AddForm, AddButton } from './styles';
+import { AddForm } from './styles';
 import Input from '../Input';
 import DatePicker from '../DatePicker'
 
 import api from '../../services/api';
+
+import Button from '../../components/Button';
 
 export default function ModalCliente(props) {
 
@@ -142,12 +144,12 @@ export default function ModalCliente(props) {
         </div>
 
         <div className="buttons" >
-          <AddButton type="button" className="addButton" onClick={props.onToggleModalCliente} >
-            <span className="addButton" >Cancelar</span>
-          </AddButton>
-          <AddButton type="submit" className="addButton" >
-            <span className="addButton" >Adicionar</span>
-          </AddButton>
+          <Button type="button" onClick={props.onToggleModalCliente} >
+            <span >Cancelar</span>
+          </Button>
+          <Button type="submit"  >
+            <span >Adicionar</span>
+          </Button>
         </div>
       </div>
 
