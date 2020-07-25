@@ -77,18 +77,37 @@ export default function ModalCliente(props) {
           CLI_NOME: formData.nome,
           CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
           CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
-          CLI_FONE: formData.fone,
+          CLI_FONE: unMask(formData.fone)
         },
+        docs: []
+      }
+
+      await api.post('v1/cadastro', cliente);
+
+      const response = await api.get('v1/cadastro');
+
+      const { retorno } = response.data
+
+      const clienteID = retorno.filter(registro => registro.CLI_CNPJ_CPF === formData.cpf_cnpj)
+
+      const newEndereco = endereco
+
+      const { CLI_ID } = clienteID[0]
+
+      newEndereco.map(endereco => endereco.CLIE_CLI_ID = CLI_ID)
+
+      setEndereco(newEndereco)
+
+      const enderecoPost = {
+        cliente: {},
         docs: endereco
       }
 
-      //console.log(cliente)
+      await api.post('/v1/cadastro', enderecoPost);
 
-      //const response = await api.post('v1/cadastro', cliente);
-      //toast.success('Cliente cadastrado!');
-
-      console.log(cliente);
-
+      toast.success('Cliente cadastrado!');
+      props.onToggleModalCliente();
+      props.onConfirmAdd();
 
     }
     catch (err) {
@@ -179,7 +198,6 @@ export default function ModalCliente(props) {
 
     const [docs] = newEndereco.docs
     setEndereco([...endereco, docs])
-    console.log(endereco)
 
   }
 

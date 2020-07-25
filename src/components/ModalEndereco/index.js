@@ -115,14 +115,6 @@ export default function ModalEndereco(props) {
       props.returnEndereco(endereco);
       props.onToggleModalEndereco();
 
-      /*
-      const response = await api.put('/v1/cadastro', endereco);
-
-      props.onConfirmAdd();
-      props.onAddEndereco(formData);
-      console.log(response);
-      */
-
     }
     catch (err) {
       const validationErrors = {};
