@@ -18,7 +18,7 @@ import api from '../../services/api';
 import Button from '../../components/Button';
 import ModalEndereco from '../../components/ModalEndereco';
 
-export default function ModalCliente(props) {
+export default function ModalAddCliente(props) {
 
   const [cpf_cnpj, setCpf_cnpj] = useState('');
   const [fone, setFone] = useState('');
@@ -226,7 +226,7 @@ export default function ModalCliente(props) {
           <div style={{ marginLeft: '20px', marginBottom: '20px' }}>
             <Button type="submit" onClick={handleSubmitCliente} form="cliente_form" >
               <FaSave color='#4E2A77' size='18px' />
-              <span>Salvar Cadastro</span>
+              <span id="save">Salvar Cadastro</span>
             </Button>
           </div>
 

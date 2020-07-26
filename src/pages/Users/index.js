@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
+import { toast } from 'react-toastify';
 
 import { Overlay, Container } from './styles';
 import api from '../../services/api';
 import Header from '../../components/Header';
-import ModalCliente from '../../components/ModalCliente';
+import ModalUpdateCliente from '../../components/ModalUpdateCliente';
+import ModalAddCliente from '../../components/ModalAddCliente';
 import { FaPlus, FaSearch, FaEdit, FaExternalLinkAlt } from "react-icons/fa";
 import { format } from 'date-fns';
 
@@ -19,6 +21,7 @@ export default function Users() {
 
   const [overlay, setOverlay] = useState(false);
   const [addModal, setAddModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
 
   const [confirmAdd, setConfirmAdd] = useState(false);
 
@@ -28,14 +31,37 @@ export default function Users() {
   const [filter, setFilter] = useState('');
 
 
+  const [dataSelected, setDataSelected] = useState([]);
+
+  var value = []
+
   const toggleOverlay = useCallback(() => {
     setOverlay(!overlay)
   }, [overlay]);
 
-  const toggleModalCliente = useCallback(() => {
+  const toggleAddModalCliente = useCallback(() => {
     toggleOverlay()
     setAddModal(!addModal)
   }, [addModal, toggleOverlay]);
+
+  const toggleUpdateModalCliente = useCallback(() => {
+
+    console.log(typeof (window.value))
+
+    if (window.value.length === 0) {
+
+      toast.error("Selecione um cadastro para alterar")
+      return
+
+    }
+
+    else {
+      toggleOverlay()
+      setUpdateModal(!updateModal)
+    }
+
+
+  }, [updateModal, toggleOverlay]);
 
   const modules = AllCommunityModules
 
@@ -43,7 +69,6 @@ export default function Users() {
     async function loadUsers() {
       const response = await api.get('v1/cadastro')
       setUser(response.data.retorno)
-
     }
     loadUsers();
   }, [confirmAdd, idClick])
@@ -110,9 +135,13 @@ export default function Users() {
     gridColumnApi = params.columnApi;
 
     const selectedRows = gridApi.getSelectedRows();
-   // console.log(selectedRows)
+
+    setDataSelected(selectedRows);
+
+    window.value = selectedRows
 
   };
+
 
   return (
     <>
@@ -124,28 +153,28 @@ export default function Users() {
 
       <Container>
 
-      <div style={{ display: 'flex', marginTop: '-25px', marginBottom: '10px', marginLeft: '20px' }}>
-          <Button onClick={toggleModalCliente}>
+        <div style={{ display: 'flex', marginTop: '-25px', marginBottom: '10px', marginLeft: '20px' }}>
+          <Button onClick={toggleAddModalCliente}>
             <FaPlus color='#4E2A77' size='18px' />
             <span>Novo Cliente</span>
           </Button>
 
-          <Button onClick={toggleModalCliente}>
+          <Button >
             <FaExternalLinkAlt color='#4E2A77' size='18px' />
             <span>Visualizar Informações</span>
           </Button>
 
-          <Button onClick={toggleModalCliente}>
+          <Button onClick={toggleUpdateModalCliente}>
             <FaEdit color='#4E2A77' size='18px' />
             <span>Alterar Cadastro</span>
           </Button>
 
-          <Button onClick={toggleModalCliente}>
+          <Button >
             <FaSearch color='#4E2A77' size='18px' />
             <span>Pesquisar Cliente</span>
           </Button>
 
-      </div>
+        </div>
 
       </Container>
 
@@ -175,8 +204,22 @@ export default function Users() {
         overlay && addModal ?
           <>
             <Overlay>
-              <ModalCliente
-                onToggleModalCliente={toggleModalCliente}
+              <ModalAddCliente
+                onToggleModalCliente={toggleAddModalCliente}
+                onConfirmAdd={updateStateAdd}
+              />
+            </Overlay>
+          </>
+          : <></>
+      }
+
+      {
+        overlay && updateModal && dataSelected ?
+          <>
+            <Overlay>
+              <ModalUpdateCliente
+                rowDataSelected={dataSelected}
+                onToggleModalCliente={toggleUpdateModalCliente}
                 onConfirmAdd={updateStateAdd}
               />
             </Overlay>
