@@ -39,6 +39,13 @@ export const Container = styled(animated.div)`
 
     margin: 25px 0 10px;
 
+    a {
+        text-decoration: none;
+        color: #fff;
+      }
+
+
+
     li {
       color: #fff;
       font-size: 16px;
@@ -46,6 +53,7 @@ export const Container = styled(animated.div)`
       padding: 14px;
       transition: background 0.2s;
       cursor: pointer;
+
 
       &:hover {
        background: rgba(0,0,0,0.3);

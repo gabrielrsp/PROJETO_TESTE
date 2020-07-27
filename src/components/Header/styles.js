@@ -20,6 +20,7 @@ export const Wrapper = styled.div `
 
   top: 50px;
   margin-top: 10px;
+  margin-bottom: 30px;
 
 
   h2 {
@@ -30,7 +31,8 @@ export const Wrapper = styled.div `
   h3 {
     font-size: 24px;
     color: #4E2A77;
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: auto;
 
   }
 

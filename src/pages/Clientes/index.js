@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 
 import Button from '../../components/Button'
 
-export default function Users() {
+export default function Clientes() {
 
   const [overlay, setOverlay] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -152,18 +152,14 @@ export default function Users() {
         filterValue={filter}
         onChangeFilterValue={(e) => setFilter(e.target.value)}
         onToggleSideBar={toggleHandler}
-
       >
-
-
-      Cadastro de Clientes
+        Cadastro de Clientes
       </Header>
 
-
-        <Sidebar
-          toggled={isToggled}
-          closeSideBar={() => setIsToggled(false)}
-        />
+      <Sidebar
+        toggled={isToggled}
+        closeSideBar={() => setIsToggled(false)}
+      />
 
       <Container>
 
@@ -184,7 +180,7 @@ export default function Users() {
           </Button>
 
           <Button >
-            <FaSearch color='#4E2A77' size='18px'/>
+            <FaSearch color='#4E2A77' size='18px' />
             <span>Pesquisar Cliente</span>
           </Button>
 
