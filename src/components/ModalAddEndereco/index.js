@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { mask, unMask } from 'remask';
 
@@ -11,32 +11,14 @@ import { FaTimes, FaCheck } from "react-icons/fa";
 
 import api from '../../services/api';
 
-export default function ModalEndereco(props) {
+export default function ModalAddEndereco(props) {
 
-  const selectedData = props.rowDataSelected;
+  const [cep, setCep] = useState('');
 
-  const [dataObj] = selectedData
+  const onChangeCep = event => {
+    setCep(mask(unMask(formRef.current.getFieldValue('cep')), ['99999-999']));
 
-  const clienteId = dataObj.CLIE_CLI_ID
-  const enderecoId = dataObj.CLIE_ID
-  const cep = dataObj.CLIE_CEP
-  const endereco = dataObj.CLIE_ENDERECO
-  const bairro = dataObj.CLIE_BAIRRO
-  const cidade = dataObj.CLIE_CIDADE
-  const tipo_endereco = dataObj.CLIE_TIPO
-  const uf = dataObj.CLIE_UF
-
-  const editValues = {
-    clienteId,
-    enderecoId,
-    tipo_endereco,
-    cep,
-    endereco,
-    bairro,
-    cidade,
-    uf,
   }
-
 
   const formRef = useRef(null);
 
@@ -119,8 +101,8 @@ export default function ModalEndereco(props) {
       const endereco = {
         cliente: {},
         docs: [{
-          CLIE_CLI_ID: dataObj.CLIE_CLI_ID,
-          CLIE_ID: dataObj.CLIE_ID,
+          CLIE_CLI_ID: 0,
+          CLIE_ID: 0,
           CLIE_TIPO: formData.tipo_endereco,
           CLIE_CEP: formData.cep,
           CLIE_ENDERECO: formData.endereco,
@@ -150,7 +132,7 @@ export default function ModalEndereco(props) {
   return (
 
     <>
-      <AddForm initialData={editValues} onSubmit={handleSubmitEndereco} ref={formRef} >
+      <AddForm onSubmit={handleSubmitEndereco} ref={formRef} >
 
         <div className="modalHeader" >
           <h3>Formulário de Endereço</h3>
@@ -192,6 +174,8 @@ export default function ModalEndereco(props) {
                 <Input
                   name="cep"
                   type="text"
+                  onChange={onChangeCep}
+                  value={cep}
                 />
               </div>
             </div>

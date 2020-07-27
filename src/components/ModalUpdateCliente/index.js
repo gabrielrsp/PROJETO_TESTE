@@ -16,7 +16,7 @@ import Input from '../Input';
 import DatePicker from '../DatePicker'
 import api from '../../services/api';
 import Button from '../../components/Button';
-import ModalEndereco from '../../components/ModalEndereco';
+import ModalUpdateEndereco from '../../components/ModalUpdateEndereco';
 
 export default function ModalUpdateCliente(props) {
 
@@ -108,18 +108,40 @@ export default function ModalUpdateCliente(props) {
   }, [overlay]);
 
   const toggleModalEndereco = useCallback(() => {
+
+    if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
+
+      toast.error("Selecione um endereco para alterar")
+      return
+    }
+
+    else {
+      toggleOverlay()
+      setAddModal(!addModal)
+
+    }
+
+  }, [addModal, toggleOverlay]);
+
+
+
+  const closeModalEndereco = useCallback(() => {
+
+    window.enderecoCheckBox = 0
     toggleOverlay()
     setAddModal(!addModal)
+
   }, [addModal, toggleOverlay]);
+
+
 
   const modules = AllCommunityModules;
 
   useEffect(() => {
     async function loadAdresses() {
-
       const [dataObj] = props.rowDataSelected;
-
       setEndereco(dataObj.CLIENTE_E)
+      window.enderecoCheckBox = 0
     }
     loadAdresses();
   }, [confirmAdd, idClick])
@@ -213,7 +235,10 @@ export default function ModalUpdateCliente(props) {
     gridColumnApi = params.columnApi;
 
     const selectedRows = gridApi.getSelectedRows();
+
     setDataSelected(selectedRows);
+
+    window.enderecoCheckBox = selectedRows
 
   };
 
@@ -306,7 +331,7 @@ export default function ModalUpdateCliente(props) {
             <span>Alterar Endereço</span>
           </Button>
 
-          <Button type="submit" onClick={toggleModalEndereco} >
+          <Button type="submit">
             <FaTrashAlt color='#4E2A77' size='18px' />
             <span>Excluir Endereço</span>
           </Button>
@@ -340,10 +365,10 @@ export default function ModalUpdateCliente(props) {
 
           <>
             <Overlay>
-              <ModalEndereco
+              <ModalUpdateEndereco
                 rowDataSelected={dataSelected}
                 returnEndereco={newEndereco => showEndereco(newEndereco)}
-                onToggleModalEndereco={toggleModalEndereco}
+                onToggleModalEndereco={closeModalEndereco}
                 onConfirmAdd={updateStateAdd}
               />
             </Overlay>

@@ -12,6 +12,7 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 import ModalUpdateCliente from '../../components/ModalUpdateCliente';
 import ModalAddCliente from '../../components/ModalAddCliente';
+import Sidebar from '../../components/Sidebar';
 import { FaPlus, FaSearch, FaEdit, FaExternalLinkAlt } from "react-icons/fa";
 import { format } from 'date-fns';
 
@@ -30,8 +31,13 @@ export default function Users() {
 
   const [filter, setFilter] = useState('');
 
-
   const [dataSelected, setDataSelected] = useState([]);
+
+  const [isToggled, setIsToggled] = useState(false);
+
+  const toggleHandler = () => {
+    setIsToggled(!isToggled)
+  }
 
   var value = []
 
@@ -46,13 +52,10 @@ export default function Users() {
 
   const toggleUpdateModalCliente = useCallback(() => {
 
-    console.log(typeof (window.value))
-
-    if (window.value.length === 0) {
+    if (!window.value || window.value.length === 0) {
 
       toast.error("Selecione um cadastro para alterar")
       return
-
     }
 
     else {
@@ -148,8 +151,19 @@ export default function Users() {
       <Header
         filterValue={filter}
         onChangeFilterValue={(e) => setFilter(e.target.value)}
-      > Cadastro de Clientes
+        onToggleSideBar={toggleHandler}
+
+      >
+
+
+      Cadastro de Clientes
       </Header>
+
+
+        <Sidebar
+          toggled={isToggled}
+          closeSideBar={() => setIsToggled(false)}
+        />
 
       <Container>
 
@@ -170,7 +184,7 @@ export default function Users() {
           </Button>
 
           <Button >
-            <FaSearch color='#4E2A77' size='18px' />
+            <FaSearch color='#4E2A77' size='18px'/>
             <span>Pesquisar Cliente</span>
           </Button>
 

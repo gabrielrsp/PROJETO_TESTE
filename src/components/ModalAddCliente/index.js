@@ -16,12 +16,14 @@ import Input from '../Input';
 import DatePicker from '../DatePicker'
 import api from '../../services/api';
 import Button from '../../components/Button';
-import ModalEndereco from '../../components/ModalEndereco';
+import ModalAddEndereco from '../../components/ModalAddEndereco';
+import ModalUpdateEndereco from '../../components/ModalUpdateCliente';
 
 export default function ModalAddCliente(props) {
 
   const [cpf_cnpj, setCpf_cnpj] = useState('');
   const [fone, setFone] = useState('');
+  const [dataSelected, setDataSelected] = useState([]);
 
   const onChange_cpf_cnpj = event => {
     setCpf_cnpj(mask(unMask(formRef.current.getFieldValue('cpf_cnpj')), ['999.999.999-99', '99.999.999/9999-99']));
@@ -42,7 +44,9 @@ export default function ModalAddCliente(props) {
   }
 
   const [overlay, setOverlay] = useState(false);
+
   const [addModal, setAddModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
 
   const [confirmAdd, setConfirmAdd] = useState(false);
 
@@ -158,7 +162,7 @@ export default function ModalAddCliente(props) {
   const columns = [
 
     {
-      headerName: 'Tipo', field: 'CLIE_TIPO', flex: 1
+      headerName: 'Tipo', field: 'CLIE_TIPO', flex: 1, checkboxSelection: true
     },
     {
       headerName: 'Logradouro', field: 'CLIE_ENDERECO', flex: 1
@@ -200,6 +204,23 @@ export default function ModalAddCliente(props) {
     setEndereco([...endereco, docs])
 
   }
+
+
+  const onSelectionChanged = (params) => {
+    gridApi = params.api;
+    gridColumnApi = params.columnApi;
+
+    const selectedRows = gridApi.getSelectedRows();
+
+    setDataSelected(selectedRows);
+    console.log(selectedRows)
+
+    window.enderecoCheckBox = selectedRows
+
+  };
+
+
+
 
   return (
 
@@ -286,12 +307,12 @@ export default function ModalAddCliente(props) {
             <span>Novo Endereço</span>
           </Button>
 
-          <Button type="submit" onClick={toggleModalEndereco} >
+          <Button type="submit" >
             <FaEdit color='#4E2A77' size='18px' />
             <span>Alterar Endereço</span>
           </Button>
 
-          <Button type="submit" onClick={toggleModalEndereco} >
+          <Button type="submit"  >
             <FaTrashAlt color='#4E2A77' size='18px' />
             <span>Excluir Endereço</span>
           </Button>
@@ -310,6 +331,8 @@ export default function ModalAddCliente(props) {
             rowData={rowData}
             defaultColDef={defaultColDef}
             onGridReady={onGridReady}
+            rowSelection='single'
+            onSelectionChanged={onSelectionChanged}
           >
           </AgGridReact>
 
@@ -321,7 +344,21 @@ export default function ModalAddCliente(props) {
         overlay && addModal ?
           <>
             <Overlay>
-              <ModalEndereco
+              <ModalAddEndereco
+                returnEndereco={newEndereco => showEndereco(newEndereco)}
+                onToggleModalEndereco={toggleModalEndereco}
+                onConfirmAdd={updateStateAdd}
+              />
+            </Overlay>
+          </>
+          : <></>
+      }
+
+{
+        overlay && updateModal ?
+          <>
+            <Overlay>
+              <ModalUpdateEndereco
                 returnEndereco={newEndereco => showEndereco(newEndereco)}
                 onToggleModalEndereco={toggleModalEndereco}
                 onConfirmAdd={updateStateAdd}

@@ -14,8 +14,6 @@ z-index: 1;
 flex-direction: column;
 `;
 
-
-
 export const Container = styled.div`
 
 button {

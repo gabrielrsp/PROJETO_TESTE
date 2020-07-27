@@ -13,7 +13,7 @@ import { Overlay, Container, ClienteForm } from './styles';
 import DatePicker from '../../components/DatePicker';
 import api from '../../services/api';
 import Header from '../../components/Header';
-import ModalEndereco from '../../components/ModalEndereco';
+import ModalAddEndereco from '../../components/ModalAddEndereco';
 import { format } from 'date-fns';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -278,7 +278,7 @@ export default function Cadastro() {
         overlay && addModal ?
           <>
             <Overlay>
-              <ModalEndereco
+              <ModalAddEndereco
                 onToggleModalEndereco={toggleModalEndereco}
                 onConfirmAdd={updateStateAdd}
               />
