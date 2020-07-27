@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { mask, unMask } from 'remask';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
-import { FaSave, FaPlusCircle, FaTrashAlt, FaEdit, FaTimes } from "react-icons/fa";
+import { FaSave, FaPlusCircle, FaEdit, FaTimes } from "react-icons/fa";
 import * as Yup from 'yup';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -17,26 +16,19 @@ import DatePicker from '../DatePicker'
 import api from '../../services/api';
 import Button from '../../components/Button';
 import ModalUpdateEndereco from '../../components/ModalUpdateEndereco';
+import ModalAddEndereco from '../../components/ModalAddEndereco';
 
 export default function ModalUpdateCliente(props) {
 
   const formRef = useRef(null);
 
-  function FormataStringData(data) {
-    var dia = data.split("/")[0];
-    var mes = data.split("/")[1];
-    var ano = data.split("/")[2];
-    return ano + '/' + ("0" + mes).slice(-2) + '/' + ("0" + dia).slice(-2);
-    // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
-  }
-
   const [overlay, setOverlay] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
 
   const [confirmAdd, setConfirmAdd] = useState(false);
 
-  const [cliente, setCliente] = useState([] | null);
-  const [idClick, setIdClick] = useState(1);
+  const [idClick] = useState(1);
 
   const [endereco, setEndereco] = useState([]);
 
@@ -56,11 +48,9 @@ export default function ModalUpdateCliente(props) {
 
       });
 
-
       await schema.validate(formData, {
         abortEarly: false,
       });
-
 
       const newEndereco = endereco
 
@@ -70,26 +60,63 @@ export default function ModalUpdateCliente(props) {
 
       setEndereco(newEndereco)
 
-      const cliente = {
-        cliente: {
-          CLI_ID: dataObj.CLI_ID,
-          CLI_CNPJ_CPF: formData.cpf_cnpj,
-          CLI_NOME: formData.nome,
-          CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
-          CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
-          CLI_FONE: formData.fone
-        },
-        docs: endereco
+
+      if (dataObj.CLIENTE_E.length === 0) {
+
+        newEndereco.map(endereco => endereco.CLIE_CLI_ID = dataObj.CLI_ID)
+
+        setEndereco(newEndereco)
+
+        const enderecoPost = {
+          cliente: {},
+          docs: endereco
+        }
+
+        await api.post('v1/cadastro', enderecoPost);
+
+        const clientePost = {
+          cliente: {
+            CLI_ID: dataObj.CLI_ID,
+            CLI_CNPJ_CPF: formData.cpf_cnpj,
+            CLI_NOME: formData.nome,
+            CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
+            CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
+            CLI_FONE: formData.fone
+          },
+          docs: endereco
+        }
+
+
+        //Apenas Modifica um cadastro já existente
+        await api.put('v1/cadastro', clientePost);
+
+        toast.success('Cliente Alterado!');
+        props.onToggleModalCliente();
+        props.onConfirmAdd();
+
       }
 
+      else {
 
-      await api.put('v1/cadastro', cliente);
+        const cliente = {
+          cliente: {
+            CLI_ID: dataObj.CLI_ID,
+            CLI_CNPJ_CPF: formData.cpf_cnpj,
+            CLI_NOME: formData.nome,
+            CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
+            CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
+            CLI_FONE: formData.fone
+          },
+          docs: endereco
+        }
 
-      toast.success('Cliente cadastrado!');
-      props.onToggleModalCliente();
-      props.onConfirmAdd();
+        await api.put('v1/cadastro', cliente);
 
+        toast.success('Cliente cadastrado!');
+        props.onToggleModalCliente();
+        props.onConfirmAdd();
 
+      }
 
     }
     catch (err) {
@@ -107,45 +134,37 @@ export default function ModalUpdateCliente(props) {
     setOverlay(!overlay)
   }, [overlay]);
 
-  const toggleModalEndereco = useCallback(() => {
 
-    if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
+  const toggleModalAddEndereco = useCallback(() => {
+    toggleOverlay()
+    setAddModal(!addModal)
+    setUpdateModal(false)
+  }, [addModal, toggleOverlay]);
 
-      toast.error("Selecione um endereco para alterar")
+  const toggleModalUpdateEndereco = useCallback(() => {
+    if (! window.enderecoCheckBox ||  window.enderecoCheckBox.length === 0) {
+      toast.error("Selecione um endereço para alterar")
       return
     }
 
-    else {
-      toggleOverlay()
-      setAddModal(!addModal)
-
-    }
-
-  }, [addModal, toggleOverlay]);
-
-
-
-  const closeModalEndereco = useCallback(() => {
-
-    window.enderecoCheckBox = 0
     toggleOverlay()
-    setAddModal(!addModal)
-
-  }, [addModal, toggleOverlay]);
-
+    setAddModal(false)
+    setUpdateModal(true)
+  }, [ toggleOverlay]);
 
 
   const modules = AllCommunityModules;
 
   useEffect(() => {
-    async function loadAdresses() {
+    async function loadEnderecos() {
       const [dataObj] = props.rowDataSelected;
+
+
       setEndereco(dataObj.CLIENTE_E)
       window.enderecoCheckBox = 0
     }
-    loadAdresses();
-  }, [confirmAdd, idClick])
-
+    loadEnderecos();
+  }, [ props.rowDataSelected, confirmAdd, idClick])
 
 
   const selectedData = props.rowDataSelected;
@@ -169,13 +188,6 @@ export default function ModalUpdateCliente(props) {
   }
 
   const rowData = endereco || [];
-
-  const formatar = (params) => {
-    const { value } = params;
-    const data = new Date(value.substring(0, 10));
-    const dateFormatted = format(data, 'dd/MM/yyyy');
-    return dateFormatted;
-  }
 
   function updateStateAdd() {
     setConfirmAdd(!confirmAdd);
@@ -220,7 +232,7 @@ export default function ModalUpdateCliente(props) {
   }
 
 
-  function showEndereco(newEndereco) {
+  function updateStateEndereco(newEndereco) {
 
     const [docs] = newEndereco.docs
 
@@ -229,6 +241,14 @@ export default function ModalUpdateCliente(props) {
     setEndereco([...novoEndereco, docs])
 
   }
+
+  function addStateEndereco(newEndereco) {
+
+    const [docs] = newEndereco.docs
+    setEndereco([...endereco, docs])
+
+  }
+
 
   const onSelectionChanged = (params) => {
     gridApi = params.api;
@@ -241,7 +261,6 @@ export default function ModalUpdateCliente(props) {
     window.enderecoCheckBox = selectedRows
 
   };
-
 
   return (
 
@@ -321,20 +340,21 @@ export default function ModalUpdateCliente(props) {
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
-          <Button type="submit" onClick={toggleModalEndereco} >
+
+        <Button type="submit" onClick={toggleModalAddEndereco} >
             <FaPlusCircle color='#4E2A77' size='18px' />
             <span>Novo Endereço</span>
           </Button>
 
-          <Button type="submit" onClick={toggleModalEndereco} >
-            <FaEdit color='#4E2A77' size='18px' />
-            <span>Alterar Endereço</span>
-          </Button>
 
-          <Button type="submit">
-            <FaTrashAlt color='#4E2A77' size='18px' />
-            <span>Excluir Endereço</span>
-          </Button>
+          {endereco.length ?
+            <Button type="submit" onClick={toggleModalUpdateEndereco} >
+              <FaEdit color='#4E2A77' size='18px' />
+              <span>Alterar Endereço</span>
+            </Button>
+            : <></>
+          }
+
         </div>
 
         <div
@@ -361,19 +381,33 @@ export default function ModalUpdateCliente(props) {
 
       {
         overlay && addModal ?
-
-
           <>
             <Overlay>
-              <ModalUpdateEndereco
+              <ModalAddEndereco
                 rowDataSelected={dataSelected}
-                returnEndereco={newEndereco => showEndereco(newEndereco)}
-                onToggleModalEndereco={closeModalEndereco}
+                returnEndereco={newEndereco => addStateEndereco(newEndereco)}
+                onToggleModalEndereco={toggleModalAddEndereco}
                 onConfirmAdd={updateStateAdd}
               />
             </Overlay>
           </>
           : <></>
+      }
+
+      {
+        overlay && updateModal && window.enderecoCheckBox ?
+          <>
+            <Overlay>
+              <ModalUpdateEndereco
+                rowDataSelected={dataSelected}
+                returnEndereco={newEndereco => updateStateEndereco(newEndereco)}
+                onToggleModalEndereco={toggleModalUpdateEndereco}
+                onConfirmAdd={updateStateAdd}
+              />
+            </Overlay>
+          </>
+          :
+           <></>
       }
     </Container>
 

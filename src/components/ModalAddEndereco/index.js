@@ -2,14 +2,12 @@ import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import { mask, unMask } from 'remask';
 
-import { Container, AddForm, Line } from './styles';
+import { AddForm, Line } from './styles';
 import Input from '../Input';
 import Select from '../Select'
 import Button from '../Button';
 
 import { FaTimes, FaCheck } from "react-icons/fa";
-
-import api from '../../services/api';
 
 export default function ModalAddEndereco(props) {
 
@@ -19,6 +17,7 @@ export default function ModalAddEndereco(props) {
     setCep(mask(unMask(formRef.current.getFieldValue('cep')), ['99999-999']));
 
   }
+
 
   const formRef = useRef(null);
 

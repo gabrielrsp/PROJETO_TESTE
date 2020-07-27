@@ -1,15 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as Yup from 'yup';
-import { mask, unMask } from 'remask';
 
-import { Container, AddForm, Line } from './styles';
+import { AddForm, Line } from './styles';
 import Input from '../Input';
 import Select from '../Select'
 import Button from '../Button';
 
-import { FaTimes, FaCheck } from "react-icons/fa";
-
-import api from '../../services/api';
+import { FaTimes, FaEdit } from "react-icons/fa";
 
 export default function ModalUpdateEndereco(props) {
 
@@ -96,6 +93,12 @@ export default function ModalUpdateEndereco(props) {
     }
   }
 
+  useEffect(() => {
+    console.log('TEI')
+  }, [])
+
+
+
   async function handleSubmitEndereco(formData) {
     try {
 
@@ -134,7 +137,6 @@ export default function ModalUpdateEndereco(props) {
       props.returnEndereco(endereco);
       props.onToggleModalEndereco();
 
-
     }
     catch (err) {
       const validationErrors = {};
@@ -146,6 +148,7 @@ export default function ModalUpdateEndereco(props) {
       }
     }
   }
+
 
   return (
 
@@ -241,8 +244,8 @@ export default function ModalUpdateEndereco(props) {
           </div>
 
           <Button type="submit"  >
-            <FaCheck color='#4E2A77' size='18px' />
-            <span className="spanButton">Adicionar</span>
+            <FaEdit color='#4E2A77' size='18px' />
+            <span className="spanButton">Alterar</span>
           </Button>
 
         </div>

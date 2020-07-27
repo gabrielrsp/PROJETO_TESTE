@@ -5,7 +5,7 @@ import ReactSelect from 'react-select';
 export default function Select({ name, ...rest }) {
 
   const selectRef = useRef(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue, registerField } = useField(name);
 
   useEffect(() => {
     registerField({

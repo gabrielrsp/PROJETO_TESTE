@@ -22,7 +22,7 @@ function Sidebar({ toggled, closeSideBar }) {
     >
 
       <div className='header'>
-        <FaBars color='#fff' size='22px' style={{ marginTop: '2px', marginRight: '12px' }} />
+        <FaBars color='#fff' size='22px' style={{ marginTop: '2px', marginRight: '12px' }} onClick={closeSideBar}  />
         <h2>Menu</h2>
         <FaTimes color='#fff' size='22px' style={{ marginRight: '12px', marginLeft: 'auto' }} onClick={closeSideBar} />
       </div>

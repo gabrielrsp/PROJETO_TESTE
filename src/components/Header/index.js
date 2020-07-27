@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBars, FaPlus, FaSearch, FaEdit, FaExternalLinkAlt } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { Container, Wrapper } from './styles';
 import logo from '../../assets/logo.svg';
 

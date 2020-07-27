@@ -17,7 +17,7 @@ import DatePicker from '../DatePicker'
 import api from '../../services/api';
 import Button from '../../components/Button';
 import ModalAddEndereco from '../../components/ModalAddEndereco';
-import ModalUpdateEndereco from '../../components/ModalUpdateCliente';
+import ModalUpdateEndereco from '../../components/ModalUpdateEndereco';
 
 export default function ModalAddCliente(props) {
 
@@ -34,14 +34,6 @@ export default function ModalAddCliente(props) {
   }
 
   const formRef = useRef(null);
-
-  function FormataStringData(data) {
-    var dia = data.split("/")[0];
-    var mes = data.split("/")[1];
-    var ano = data.split("/")[2];
-    return ano + '/' + ("0" + mes).slice(-2) + '/' + ("0" + dia).slice(-2);
-    // Utilizo o .slice(-2) para garantir o formato com 2 digitos.
-  }
 
   const [overlay, setOverlay] = useState(false);
 
@@ -98,6 +90,8 @@ export default function ModalAddCliente(props) {
 
       const { CLI_ID } = clienteID[0]
 
+
+
       newEndereco.map(endereco => endereco.CLIE_CLI_ID = CLI_ID)
 
       setEndereco(newEndereco)
@@ -129,10 +123,21 @@ export default function ModalAddCliente(props) {
     setOverlay(!overlay)
   }, [overlay]);
 
-  const toggleModalEndereco = useCallback(() => {
+  const toggleModalAddEndereco = useCallback(() => {
     toggleOverlay()
     setAddModal(!addModal)
+    setUpdateModal(false)
   }, [addModal, toggleOverlay]);
+
+  const toggleModalUpdateEndereco = useCallback(() => {
+    if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
+      toast.error("Selecione um endereço para alterar")
+      return
+    }
+    toggleOverlay()
+    setAddModal(false)
+    setUpdateModal(true)
+  }, [ toggleOverlay]);
 
   const modules = AllCommunityModules;
 
@@ -140,22 +145,15 @@ export default function ModalAddCliente(props) {
     async function loadUsers() {
       const response = await api.get('v1/cadastro')
       setCliente(response.data.retorno)
-
     }
     loadUsers();
-  }, [confirmAdd, idClick])
+  }, [endereco, confirmAdd, idClick])
 
 
   const rowData = endereco || [];
 
-  const formatar = (params) => {
-    const { value } = params;
-    const data = new Date(value.substring(0, 10));
-    const dateFormatted = format(data, 'dd/MM/yyyy');
-    return dateFormatted;
-  }
 
-  function updateStateAdd() {
+  function updateState() {
     setConfirmAdd(!confirmAdd);
   }
 
@@ -198,10 +196,28 @@ export default function ModalAddCliente(props) {
   }
 
 
-  function showEndereco(newEndereco) {
+  function addStateEndereco(newEndereco) {
 
     const [docs] = newEndereco.docs
     setEndereco([...endereco, docs])
+
+  }
+
+  function updateStateEndereco(newEndereco) {
+
+    const [docs] = newEndereco.docs
+
+    const novoEndereco = endereco.filter(endereco => endereco !== dataSelected[0])
+
+    setEndereco([...novoEndereco, docs])
+
+  }
+
+  function removeStateEndereco() {
+
+    const novoEndereco = endereco.filter(endereco => endereco !== dataSelected[0])
+
+    setEndereco([...novoEndereco])
 
   }
 
@@ -213,13 +229,9 @@ export default function ModalAddCliente(props) {
     const selectedRows = gridApi.getSelectedRows();
 
     setDataSelected(selectedRows);
-    console.log(selectedRows)
-
     window.enderecoCheckBox = selectedRows
 
   };
-
-
 
 
   return (
@@ -302,20 +314,28 @@ export default function ModalAddCliente(props) {
         </div>
 
         <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
-          <Button type="submit" onClick={toggleModalEndereco} >
+          <Button type="submit" onClick={toggleModalAddEndereco} >
             <FaPlusCircle color='#4E2A77' size='18px' />
             <span>Novo Endereço</span>
           </Button>
 
-          <Button type="submit" >
-            <FaEdit color='#4E2A77' size='18px' />
-            <span>Alterar Endereço</span>
-          </Button>
 
-          <Button type="submit"  >
-            <FaTrashAlt color='#4E2A77' size='18px' />
-            <span>Excluir Endereço</span>
-          </Button>
+          {endereco.length ?
+            <Button type="submit" onClick={toggleModalUpdateEndereco} >
+              <FaEdit color='#4E2A77' size='18px' />
+              <span>Alterar Endereço</span>
+            </Button>
+            : <></>
+          }
+
+          {endereco.length ?
+            <Button type="button" onClick={removeStateEndereco} >
+              <FaTrashAlt color='#4E2A77' size='18px' />
+              <span>Excluir Endereço</span>
+            </Button>
+            : <></>
+          }
+
         </div>
 
         <div
@@ -345,23 +365,24 @@ export default function ModalAddCliente(props) {
           <>
             <Overlay>
               <ModalAddEndereco
-                returnEndereco={newEndereco => showEndereco(newEndereco)}
-                onToggleModalEndereco={toggleModalEndereco}
-                onConfirmAdd={updateStateAdd}
+                returnEndereco={newEndereco => addStateEndereco(newEndereco)}
+                onToggleModalEndereco={toggleModalAddEndereco}
+                onConfirmAdd={updateState}
               />
             </Overlay>
           </>
           : <></>
       }
 
-{
-        overlay && updateModal ?
+      {
+        overlay && updateModal && window.enderecoCheckBox ?
           <>
             <Overlay>
               <ModalUpdateEndereco
-                returnEndereco={newEndereco => showEndereco(newEndereco)}
-                onToggleModalEndereco={toggleModalEndereco}
-                onConfirmAdd={updateStateAdd}
+                rowDataSelected={dataSelected}
+                returnEndereco={newEndereco => updateStateEndereco(newEndereco)}
+                onToggleModalEndereco={toggleModalUpdateEndereco}
+                onConfirmAdd={updateState}
               />
             </Overlay>
           </>

@@ -20,7 +20,7 @@ export const AddForm = styled(Form)`
     height: 600px;
 
     input {
-        width: 90%;
+        width: 100%;
       }
 
     #input-container{
@@ -128,6 +128,7 @@ export const AddForm = styled(Form)`
 
   .select {
     margin-right: 10px;
+
   }
 
 

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import { FaSave, FaPlusCircle, FaTrashAlt, FaEdit } from "react-icons/fa";
-
 import { Container } from './styles';
 
 import Header from '../../components/Header';

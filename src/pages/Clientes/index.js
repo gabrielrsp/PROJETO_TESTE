@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { Link } from 'react-router-dom';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -27,7 +26,7 @@ export default function Clientes() {
   const [confirmAdd, setConfirmAdd] = useState(false);
 
   const [user, setUser] = useState([] | null);
-  const [idClick, setIdClick] = useState(1);
+  const [idClick] = useState(1);
 
   const [filter, setFilter] = useState('');
 
@@ -38,8 +37,6 @@ export default function Clientes() {
   const toggleHandler = () => {
     setIsToggled(!isToggled)
   }
-
-  var value = []
 
   const toggleOverlay = useCallback(() => {
     setOverlay(!overlay)
