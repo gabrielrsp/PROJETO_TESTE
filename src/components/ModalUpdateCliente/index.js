@@ -142,7 +142,7 @@ export default function ModalUpdateCliente(props) {
   }, [addModal, toggleOverlay]);
 
   const toggleModalUpdateEndereco = useCallback(() => {
-    if (! window.enderecoCheckBox ||  window.enderecoCheckBox.length === 0) {
+    if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
       toast.error("Selecione um endereço para alterar")
       return
     }
@@ -150,7 +150,7 @@ export default function ModalUpdateCliente(props) {
     toggleOverlay()
     setAddModal(false)
     setUpdateModal(true)
-  }, [ toggleOverlay]);
+  }, [toggleOverlay]);
 
 
   const modules = AllCommunityModules;
@@ -164,7 +164,7 @@ export default function ModalUpdateCliente(props) {
       window.enderecoCheckBox = 0
     }
     loadEnderecos();
-  }, [ props.rowDataSelected, confirmAdd, idClick])
+  }, [props.rowDataSelected, confirmAdd, idClick])
 
 
   const selectedData = props.rowDataSelected;
@@ -191,12 +191,36 @@ export default function ModalUpdateCliente(props) {
 
   function updateStateAdd() {
     setConfirmAdd(!confirmAdd);
+
+
   }
+
+
+  const formatTipoEndereco = (params) => {
+    const { value } = params;
+
+    let data
+
+    switch (value) {
+      case '1':
+        data = 'Residencial'
+        break;
+      case '2':
+        data = 'Comercial'
+        break;
+      case '3':
+        data = 'Alternativo'
+        break;
+    }
+
+    return data
+  }
+
 
   const columns = [
 
     {
-      headerName: 'Tipo', field: 'CLIE_TIPO', flex: 1, checkboxSelection: true
+      headerName: 'Tipo', field: 'CLIE_TIPO', flex: 1, checkboxSelection: true, valueFormatter: formatTipoEndereco,
     },
     {
       headerName: 'Logradouro', field: 'CLIE_ENDERECO', flex: 1
@@ -327,6 +351,7 @@ export default function ModalUpdateCliente(props) {
               <DatePicker
                 name="data_nasc"
                 type="text"
+                required
               />
             </div>
 
@@ -341,7 +366,7 @@ export default function ModalUpdateCliente(props) {
 
         <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
 
-        <Button type="submit" onClick={toggleModalAddEndereco} >
+          <Button type="submit" onClick={toggleModalAddEndereco} >
             <FaPlusCircle color='#4E2A77' size='18px' />
             <span>Novo Endereço</span>
           </Button>
@@ -407,7 +432,7 @@ export default function ModalUpdateCliente(props) {
             </Overlay>
           </>
           :
-           <></>
+          <></>
       }
     </Container>
 

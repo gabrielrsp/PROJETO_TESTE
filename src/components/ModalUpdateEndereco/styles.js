@@ -42,6 +42,32 @@ export const AddForm = styled(Form)`
 
   }
 
+
+  #select_uf {
+      .react-select__control {
+        width: 85px;
+
+        .react-select__value-container {
+          .react-select__placeholder {
+              color: black;
+          }
+        }
+      }
+    }
+
+    #select_tipo {
+      .react-select__control {
+        width: 155px;
+
+        .react-select__value-container {
+          .react-select__placeholder {
+              color: black;
+          }
+        }
+      }
+    }
+
+
   .grayBorder {
     border: 1px solid rgba(191,191,191,0.8);
     border-radius: 5px;

@@ -18,7 +18,6 @@ export default function ModalAddEndereco(props) {
 
   }
 
-
   const formRef = useRef(null);
 
   const options = [
@@ -203,6 +202,7 @@ export default function ModalAddEndereco(props) {
                     theme={customTheme}
                     styles={customStyles}
                     placeholder="UF"
+                    required
                   />
                 </div>
 

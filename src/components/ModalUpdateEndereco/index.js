@@ -20,7 +20,23 @@ export default function ModalUpdateEndereco(props) {
   const endereco = dataObj.CLIE_ENDERECO
   const bairro = dataObj.CLIE_BAIRRO
   const cidade = dataObj.CLIE_CIDADE
-  const tipo_endereco = dataObj.CLIE_TIPO
+
+
+  let tipo_endereco
+
+  switch (dataObj.CLIE_TIPO) {
+    case '1':
+      tipo_endereco = 'Residencial'
+      break;
+    case '2':
+      tipo_endereco = 'Comercial'
+      break;
+    case '3':
+      tipo_endereco = 'Alternativo'
+      break;
+  }
+
+
   const uf = dataObj.CLIE_UF
 
   const editValues = {
@@ -214,7 +230,7 @@ export default function ModalUpdateEndereco(props) {
             <div className="wrapper-input" >
               <div className="group_select" style={{ display: 'flex;' }} >
 
-                <div className="select" >
+              <div className="select" >
                   <h4>UF</h4>
                   <Select
                     id="select_uf"
@@ -222,7 +238,9 @@ export default function ModalUpdateEndereco(props) {
                     options={uf_options}
                     theme={customTheme}
                     styles={customStyles}
-                    placeholder="UF"
+                    placeholder={editValues.uf}
+                    required
+
                   />
                 </div>
 
@@ -234,9 +252,11 @@ export default function ModalUpdateEndereco(props) {
                     options={options}
                     theme={customTheme}
                     styles={customStyles}
-                    placeholder="Tipo"
+                    placeholder={editValues.tipo_endereco}
+                    required
                   />
                 </div>
+
 
               </div>
             </div>

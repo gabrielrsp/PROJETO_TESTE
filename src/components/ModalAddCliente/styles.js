@@ -47,7 +47,6 @@ export const Container = styled.div`
   max-width: 95%;
 
 
-
 h3 {
     font-size: 23px;
     margin-top: 3px;
@@ -55,13 +54,6 @@ h3 {
     font-weight: normal;
   }
 
-
-  h4 {
-    font-size: 18px;
-    color: #999999;
-    margin-left: 20px;
-
-  }
 
   h5 {
     font-size: 14px;

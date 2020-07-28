@@ -17,7 +17,10 @@ export default function Input({ name, ...rest }) {
 
   return (
     <div>
-      <InputUnform ref={inputRef} defaultValue={defaultValue} {...rest} />
+      <InputUnform
+        ref={inputRef}
+        defaultValue={defaultValue}
+        {...rest} />
       {error && <span className="error">{error}</span>}
     </div>
 
