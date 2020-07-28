@@ -47,11 +47,6 @@ export const AddForm = styled(Form)`
       .react-select__control {
         width: 85px;
 
-        .react-select__value-container {
-          .react-select__placeholder {
-              color: black;
-          }
-        }
       }
     }
 
@@ -59,11 +54,7 @@ export const AddForm = styled(Form)`
       .react-select__control {
         width: 155px;
 
-        .react-select__value-container {
-          .react-select__placeholder {
-              color: black;
-          }
-        }
+
       }
     }
 
