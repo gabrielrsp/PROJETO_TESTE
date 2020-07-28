@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Form } from '@unform/web';
 
-
 export const Overlay = styled.div`
 position: fixed;
 display: flex;

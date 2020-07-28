@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import * as Yup from 'yup';
 
 import { AddForm, Line } from './styles';
@@ -6,49 +6,56 @@ import Input from '../Input';
 import Select from '../Select'
 import Button from '../Button';
 
+import api from '../../services/api';
+
 import { FaTimes, FaEdit } from "react-icons/fa";
 
 export default function ModalUpdateEndereco(props) {
 
-  const selectedData = props.rowDataSelected;
+      const selectedData = props.rowDataSelected;
 
-  const [dataObj] = selectedData
+      const [dataObj] = selectedData
 
-  const clienteId = dataObj.CLIE_CLI_ID
-  const enderecoId = dataObj.CLIE_ID
-  const cep = dataObj.CLIE_CEP
-  const endereco = dataObj.CLIE_ENDERECO
-  const bairro = dataObj.CLIE_BAIRRO
-  const cidade = dataObj.CLIE_CIDADE
+      const clienteId = dataObj.CLIE_CLI_ID
+      const enderecoId = dataObj.CLIE_ID
+      const cep = dataObj.CLIE_CEP
+      const endereco = dataObj.CLIE_ENDERECO
+      const bairro = dataObj.CLIE_BAIRRO
+      const cidade = dataObj.CLIE_CIDADE
 
+      let enderecoLabel
 
-  let tipo_endereco
+      switch (dataObj.CLIE_TIPO) {
+        case '1':
+          enderecoLabel = 'Residencial'
+          break;
+        case '2':
+          enderecoLabel = 'Comercial'
+          break;
+        case '3':
+          enderecoLabel = 'Cobrança'
+          break;
+      }
 
-  switch (dataObj.CLIE_TIPO) {
-    case '1':
-      tipo_endereco = 'Residencial'
-      break;
-    case '2':
-      tipo_endereco = 'Comercial'
-      break;
-    case '3':
-      tipo_endereco = 'Alternativo'
-      break;
-  }
+      const uf = {
+        label : dataObj.CLIE_UF
+      }
 
+      const tipo_endereco = {
+        label : enderecoLabel
+    }
 
-  const uf = dataObj.CLIE_UF
+      const editValues = {
+        clienteId,
+        enderecoId,
+        tipo_endereco,
+        cep,
+        endereco,
+        bairro,
+        cidade,
+        uf,
+      }
 
-  const editValues = {
-    clienteId,
-    enderecoId,
-    tipo_endereco,
-    cep,
-    endereco,
-    bairro,
-    cidade,
-    uf,
-  }
 
 
   const formRef = useRef(null);
@@ -56,10 +63,11 @@ export default function ModalUpdateEndereco(props) {
   const options = [
     { value: '1', label: 'Residencial' },
     { value: '2', label: 'Comercial' },
-    { value: '3', label: 'Alternativo' }
+    { value: '3', label: 'Cobrança' }
   ]
 
   const uf_options = [
+
     { value: 'AC', label: 'AC' },
     { value: 'AL', label: 'AL' },
     { value: 'AM', label: 'AM' },
@@ -87,6 +95,7 @@ export default function ModalUpdateEndereco(props) {
     { value: 'SE', label: 'SE' },
     { value: 'SP', label: 'SP' },
     { value: 'TO', label: 'TO' },
+
   ]
 
   const customStyles = {
@@ -110,6 +119,7 @@ export default function ModalUpdateEndereco(props) {
   }
 
   async function handleSubmitEndereco(formData) {
+
     try {
 
       formRef.current.setErrors({});
@@ -117,17 +127,20 @@ export default function ModalUpdateEndereco(props) {
       const schema = Yup.object().shape({
 
         endereco: Yup.string().required('*Campo Obrigatório'),
-        tipo_endereco: Yup.string().required('*Campo Obrigatório'),
+        tipo_endereco: Yup.object().required('*Campo Obrigatório'),
         bairro: Yup.string().required('*Campo Obrigatório'),
         cep: Yup.string().required('*Campo Obrigatório'),
         cidade: Yup.string().required('*Campo Obrigatório'),
-        uf: Yup.string().required('*Campo Obrigatório'),
+        uf: Yup.object().required('*Campo Obrigatório'),
 
       });
 
+      /*
       await schema.validate(formData, {
         abortEarly: false,
-      });
+      });*/
+
+      const cliente = props.clienteCreated
 
       const endereco = {
         cliente: {},
@@ -144,8 +157,13 @@ export default function ModalUpdateEndereco(props) {
         ]
       }
 
+      //Apenas Modifica um cadastro já existente
+      await api.put('v1/cadastro', endereco);
+
+      console.log('VERIFICAR ALTERAÇÃO NA API')
       props.returnEndereco(endereco);
       props.onToggleModalEndereco();
+
 
     }
     catch (err) {
@@ -157,6 +175,7 @@ export default function ModalUpdateEndereco(props) {
         formRef.current.setErrors(validationErrors);
       }
     }
+
   }
 
 
@@ -232,7 +251,8 @@ export default function ModalUpdateEndereco(props) {
                     options={uf_options}
                     theme={customTheme}
                     styles={customStyles}
-                    placeholder={editValues.uf}
+                    placeholder="UF"
+
                   />
                 </div>
 
@@ -244,7 +264,7 @@ export default function ModalUpdateEndereco(props) {
                     options={options}
                     theme={customTheme}
                     styles={customStyles}
-                    placeholder={editValues.tipo_endereco}
+                    placeholder="Tipo"
                   />
                 </div>
               </div>

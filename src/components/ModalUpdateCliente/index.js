@@ -18,6 +18,7 @@ import Button from '../../components/Button';
 import ModalUpdateEndereco from '../../components/ModalUpdateEndereco';
 import ModalAddEndereco from '../../components/ModalAddEndereco';
 
+
 export default function ModalUpdateCliente(props) {
 
   const formRef = useRef(null);
@@ -52,71 +53,24 @@ export default function ModalUpdateCliente(props) {
         abortEarly: false,
       });
 
-      const newEndereco = endereco
-
-      newEndereco.map(endereco => endereco.CLIE_CLI_ID = dataObj.CLI_ID)
-
-      newEndereco.map(endereco => endereco.CLIE_ID = newEndereco.indexOf(endereco) + 1)
-
-      setEndereco(newEndereco)
-
-
-      if (dataObj.CLIENTE_E.length === 0) {
-
-        newEndereco.map(endereco => endereco.CLIE_CLI_ID = dataObj.CLI_ID)
-
-        setEndereco(newEndereco)
-
-        const enderecoPost = {
-          cliente: {},
-          docs: endereco
-        }
-
-        await api.post('v1/cadastro', enderecoPost);
-
-        const clientePost = {
-          cliente: {
-            CLI_ID: dataObj.CLI_ID,
-            CLI_CNPJ_CPF: formData.cpf_cnpj,
-            CLI_NOME: formData.nome,
-            CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
-            CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
-            CLI_FONE: formData.fone
-          },
-          docs: endereco
-        }
-
-
-        //Apenas Modifica um cadastro já existente
-        await api.put('v1/cadastro', clientePost);
-
-        toast.success('Cliente Alterado!');
-        props.onToggleModalCliente();
-        props.onConfirmAdd();
-
+      const cliente = {
+        cliente: {
+          CLI_ID: dataObj.CLI_ID,
+          CLI_CNPJ_CPF: formData.cpf_cnpj,
+          CLI_NOME: formData.nome,
+          CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
+          CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
+          CLI_FONE: formData.fone
+        },
+        docs: endereco
       }
 
-      else {
+      await api.put('v1/cadastro', cliente);
 
-        const cliente = {
-          cliente: {
-            CLI_ID: dataObj.CLI_ID,
-            CLI_CNPJ_CPF: formData.cpf_cnpj,
-            CLI_NOME: formData.nome,
-            CLI_DATACAD: format(new Date(), 'yyyy/MM/dd'),
-            CLI_DATANASC: format(formData.data_nasc, 'yyyy/MM/dd'),
-            CLI_FONE: formData.fone
-          },
-          docs: endereco
-        }
+      toast.success('Cliente cadastrado!');
+      props.onToggleModalCliente();
+      props.onConfirmAdd();
 
-        await api.put('v1/cadastro', cliente);
-
-        toast.success('Cliente cadastrado!');
-        props.onToggleModalCliente();
-        props.onConfirmAdd();
-
-      }
 
     }
     catch (err) {
@@ -164,7 +118,7 @@ export default function ModalUpdateCliente(props) {
       window.enderecoCheckBox = 0
     }
     loadEnderecos();
-  }, [props.rowDataSelected, confirmAdd, idClick])
+  }, [endereco, props.rowDataSelected, confirmAdd, idClick])
 
 
   const selectedData = props.rowDataSelected;
@@ -192,7 +146,6 @@ export default function ModalUpdateCliente(props) {
   function updateStateAdd() {
     setConfirmAdd(!confirmAdd);
 
-
   }
 
 
@@ -209,7 +162,7 @@ export default function ModalUpdateCliente(props) {
         data = 'Comercial'
         break;
       case '3':
-        data = 'Alternativo'
+        data = 'Cobrança'
         break;
     }
 
@@ -264,6 +217,8 @@ export default function ModalUpdateCliente(props) {
 
     setEndereco([...novoEndereco, docs])
 
+
+
   }
 
   function addStateEndereco(newEndereco) {
@@ -272,7 +227,6 @@ export default function ModalUpdateCliente(props) {
     setEndereco([...endereco, docs])
 
   }
-
 
   const onSelectionChanged = (params) => {
     gridApi = params.api;
@@ -366,11 +320,15 @@ export default function ModalUpdateCliente(props) {
 
         <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
 
+
+        { !endereco.length ?
           <Button type="submit" onClick={toggleModalAddEndereco} >
             <FaPlusCircle color='#4E2A77' size='18px' />
             <span>Novo Endereço</span>
           </Button>
 
+        : <></>
+        }
 
           {endereco.length ?
             <Button type="submit" onClick={toggleModalUpdateEndereco} >
@@ -409,7 +367,7 @@ export default function ModalUpdateCliente(props) {
           <>
             <Overlay>
               <ModalAddEndereco
-                rowDataSelected={dataSelected}
+                data={editValues}
                 returnEndereco={newEndereco => addStateEndereco(newEndereco)}
                 onToggleModalEndereco={toggleModalAddEndereco}
                 onConfirmAdd={updateStateAdd}

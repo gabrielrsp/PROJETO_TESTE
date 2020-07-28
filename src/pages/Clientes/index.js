@@ -12,10 +12,15 @@ import Header from '../../components/Header';
 import ModalUpdateCliente from '../../components/ModalUpdateCliente';
 import ModalAddCliente from '../../components/ModalAddCliente';
 import Sidebar from '../../components/Sidebar';
-import { FaPlus, FaSearch, FaEdit, FaExternalLinkAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaEdit, FaExternalLinkAlt, FaFilePdf } from "react-icons/fa";
 import { format } from 'date-fns';
 
-import Button from '../../components/Button'
+import Button from '../../components/Button';
+
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default function Clientes() {
 
@@ -142,6 +147,59 @@ export default function Clientes() {
 
   };
 
+  function generatePdf() {
+    console.log(user)
+    console.log(docDefinition)
+   // pdfMake.createPdf(docDefinition).open();
+  }
+
+  //const docUsers = user.forEach( user => return )
+
+
+  var docDefinition = {
+     content: [
+
+      '         ',
+      'Cliente: João',
+         {
+           style: 'tableExample',
+           table: {
+              widths: [120, 400],
+             body: [
+               ['ID', ''],
+               ['CPF', ''],
+               ['Fone', ''],
+               ['Data de Nascimento', ''],
+               ['Data de Cadastro', '']
+             ]
+           }
+         },
+         '         ',
+         '         ',
+         'Endereços:',
+         {
+           style: 'tableExample',
+           table: {
+             widths: [100, 134, 134, 134],
+             body: [
+                 ['Endereços', 'Residencial', 'Comercial', 'Cobrança'],
+                 ['Logradouro', {text: ''}, {text: ''}, {text: ''}],
+                 ['Bairro', {text: ''}, {text: ''}, {text: ''}],
+                 ['CEP', {text: ''}, {text: ''}, {text: ''}],
+                 ['Cidade', {text: ''}, {text: ''}, {text: ''}],
+                 ['UF',  {text: ''} , {text: ''}, {text: ''}],
+             ]
+           }
+         },
+         '         ',
+         '         ',
+         '   _______________________________________________________________________________________________',
+         '         ',
+         '         ',
+
+       ]
+  }
+
 
   return (
     <>
@@ -157,6 +215,8 @@ export default function Clientes() {
         toggled={isToggled}
         closeSideBar={() => setIsToggled(false)}
       />
+
+
 
       <Container>
 
@@ -179,6 +239,11 @@ export default function Clientes() {
           <Button >
             <FaSearch color='#4E2A77' size='18px' />
             <span>Pesquisar Cliente</span>
+          </Button>
+
+          <Button type="button" onClick={generatePdf}>
+          <FaFilePdf color='#4E2A77' size='18px' />
+            <span>Gerar Relatorio</span>
           </Button>
 
         </div>

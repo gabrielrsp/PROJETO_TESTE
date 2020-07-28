@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { mask, unMask } from 'remask';
 
@@ -8,6 +8,8 @@ import Select from '../Select'
 import Button from '../Button';
 
 import { FaTimes, FaCheck } from "react-icons/fa";
+import api from '../../services/api';
+
 
 export default function ModalAddEndereco(props) {
 
@@ -17,6 +19,11 @@ export default function ModalAddEndereco(props) {
     setCep(mask(unMask(formRef.current.getFieldValue('cep')), ['99999-999']));
 
   }
+
+
+
+  const clientObj = props.data
+
 
   const formRef = useRef(null);
 
@@ -99,7 +106,7 @@ export default function ModalAddEndereco(props) {
       const endereco = {
         cliente: {},
         docs: [{
-          CLIE_CLI_ID: 0,
+          CLIE_CLI_ID: clientObj.id,
           CLIE_ID: 0,
           CLIE_TIPO: formData.tipo_endereco,
           CLIE_CEP: formData.cep,
@@ -111,8 +118,11 @@ export default function ModalAddEndereco(props) {
         ]
       }
 
+      await api.post('v1/cadastro', endereco);
+
       props.returnEndereco(endereco);
       props.onToggleModalEndereco();
+
 
 
     }
@@ -202,7 +212,6 @@ export default function ModalAddEndereco(props) {
                     theme={customTheme}
                     styles={customStyles}
                     placeholder="UF"
-                    required
                   />
                 </div>
 

@@ -2,10 +2,9 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { mask, unMask } from 'remask';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
-import { FaSave, FaPlusCircle, FaTrashAlt, FaEdit, FaTimes } from "react-icons/fa";
+import { FaSave, FaTrashAlt, FaTimes } from "react-icons/fa";
 import * as Yup from 'yup';
 
-import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
@@ -16,7 +15,7 @@ import Input from '../Input';
 import DatePicker from '../DatePicker'
 import api from '../../services/api';
 import Button from '../../components/Button';
-import ModalAddEndereco from '../../components/ModalAddEndereco';
+
 import ModalUpdateEndereco from '../../components/ModalUpdateEndereco';
 
 export default function ModalAddCliente(props) {
@@ -37,8 +36,7 @@ export default function ModalAddCliente(props) {
 
   const [overlay, setOverlay] = useState(false);
 
-  const [addModal, setAddModal] = useState(false);
-  const [updateModal, setUpdateModal] = useState(false);
+  const [modalEndereco, setModalEndereco] = useState(false);
 
   const [confirmAdd, setConfirmAdd] = useState(false);
 
@@ -91,7 +89,6 @@ export default function ModalAddCliente(props) {
       const { CLI_ID } = clienteID[0]
 
 
-
       newEndereco.map(endereco => endereco.CLIE_CLI_ID = CLI_ID)
 
       setEndereco(newEndereco)
@@ -104,7 +101,11 @@ export default function ModalAddCliente(props) {
       await api.post('/v1/cadastro', enderecoPost);
 
       toast.success('Cliente cadastrado!');
-      props.onToggleModalCliente();
+      // props.onToggleModalCliente();
+
+
+      console.log(cliente)
+      setCliente(cliente)
       props.onConfirmAdd();
 
     }
@@ -123,31 +124,27 @@ export default function ModalAddCliente(props) {
     setOverlay(!overlay)
   }, [overlay]);
 
-  const toggleModalAddEndereco = useCallback(() => {
-    toggleOverlay()
-    setAddModal(!addModal)
-    setUpdateModal(false)
-  }, [addModal, toggleOverlay]);
 
   const toggleModalUpdateEndereco = useCallback(() => {
+    /*
     if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
       toast.error("Selecione um endereço para alterar")
       return
-    }
+    }*/
     toggleOverlay()
-    setAddModal(false)
-    setUpdateModal(true)
-  }, [ toggleOverlay]);
+    setModalEndereco(false)
+    setModalEndereco(true)
+  }, [toggleOverlay]);
 
   const modules = AllCommunityModules;
 
   useEffect(() => {
     async function loadUsers() {
       const response = await api.get('v1/cadastro')
-      setCliente(response.data.retorno)
+
     }
     loadUsers();
-  }, [endereco, confirmAdd, idClick])
+  }, [cliente, endereco, confirmAdd, idClick])
 
 
   const rowData = endereco || [];
@@ -171,7 +168,7 @@ export default function ModalAddCliente(props) {
         data = 'Comercial'
         break;
       case '3':
-        data = 'Alternativo'
+        data = 'Cobrança'
         break;
     }
 
@@ -200,29 +197,10 @@ export default function ModalAddCliente(props) {
     },
   ]
 
-  const defaultColDef = {
-    sortable: true,
-    editable: true,
-    filter: true,
-    floatingFilter: true,
-    flex: 1,
-  }
 
   let gridApi;
   let gridColumnApi;
 
-  const onGridReady = params => {
-    gridApi = params.api;
-    gridColumnApi = params.columnApi;
-  }
-
-
-  function addStateEndereco(newEndereco) {
-
-    const [docs] = newEndereco.docs
-    setEndereco([...endereco, docs])
-
-  }
 
   function updateStateEndereco(newEndereco) {
 
@@ -234,15 +212,6 @@ export default function ModalAddCliente(props) {
 
   }
 
-  function removeStateEndereco() {
-
-    const novoEndereco = endereco.filter(endereco => endereco !== dataSelected[0])
-
-    setEndereco([...novoEndereco])
-
-  }
-
-
   const onSelectionChanged = (params) => {
     gridApi = params.api;
     gridColumnApi = params.columnApi;
@@ -253,7 +222,6 @@ export default function ModalAddCliente(props) {
     window.enderecoCheckBox = selectedRows
 
   };
-
 
   return (
 
@@ -330,75 +298,10 @@ export default function ModalAddCliente(props) {
 
         </ClienteForm>
 
-        <h4>Endereços</h4>
-        <div style={{ textAlign: '-webkit-center' }} >
-          <hr className="line" />
-        </div>
-
-        <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
-
-          <Button type="submit" onClick={toggleModalAddEndereco} >
-            <FaPlusCircle color='#4E2A77' size='18px' />
-            <span>Novo Endereço</span>
-          </Button>
-
-
-          {endereco.length ?
-            <Button type="submit" onClick={toggleModalUpdateEndereco} >
-              <FaEdit color='#4E2A77' size='18px' />
-              <span>Alterar Endereço</span>
-            </Button>
-            : <></>
-          }
-
-          {endereco.length ?
-            <Button type="button" onClick={removeStateEndereco} >
-              <FaTrashAlt color='#4E2A77' size='18px' />
-              <span>Excluir Endereço</span>
-            </Button>
-            : <></>
-          }
-
-        </div>
-
-        <div
-          className="ag-theme-alpine"
-          style={{
-            height: '380px',
-            width: '100%',
-          }}
-        >
-          <AgGridReact
-            modules={modules}
-            columnDefs={columns}
-            rowData={rowData}
-            defaultColDef={defaultColDef}
-            onGridReady={onGridReady}
-            rowSelection='single'
-            onSelectionChanged={onSelectionChanged}
-          >
-          </AgGridReact>
-
-        </div>
-
       </div>
 
       {
-        overlay && addModal ?
-          <>
-            <Overlay>
-              <ModalAddEndereco
-                returnEndereco={newEndereco => addStateEndereco(newEndereco)}
-                onToggleModalEndereco={toggleModalAddEndereco}
-                onConfirmAdd={updateState}
-              />
-            </Overlay>
-          </>
-          : <></>
-      }
-
-      {
-        overlay && updateModal && window.enderecoCheckBox ?
+        overlay && modalEndereco ?
           <>
             <Overlay>
               <ModalUpdateEndereco
