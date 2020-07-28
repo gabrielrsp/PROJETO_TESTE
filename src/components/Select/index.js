@@ -27,10 +27,12 @@ export default function Select({ name, ...rest }) {
   }, [fieldName, registerField, rest.isMulti]);
   return (
     <ReactSelect
+      required
       defaultValue={defaultValue}
       ref={selectRef}
       classNamePrefix="react-select"
       {...rest}
+
     />
   );
 }

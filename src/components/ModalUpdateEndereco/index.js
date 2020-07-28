@@ -109,12 +109,6 @@ export default function ModalUpdateEndereco(props) {
     }
   }
 
-  useEffect(() => {
-    console.log('TEI')
-  }, [])
-
-
-
   async function handleSubmitEndereco(formData) {
     try {
 
@@ -230,7 +224,7 @@ export default function ModalUpdateEndereco(props) {
             <div className="wrapper-input" >
               <div className="group_select" style={{ display: 'flex;' }} >
 
-              <div className="select" >
+                <div className="select" >
                   <h4>UF</h4>
                   <Select
                     id="select_uf"
@@ -239,8 +233,6 @@ export default function ModalUpdateEndereco(props) {
                     theme={customTheme}
                     styles={customStyles}
                     placeholder={editValues.uf}
-                    required
-
                   />
                 </div>
 
@@ -253,11 +245,8 @@ export default function ModalUpdateEndereco(props) {
                     theme={customTheme}
                     styles={customStyles}
                     placeholder={editValues.tipo_endereco}
-                    required
                   />
                 </div>
-
-
               </div>
             </div>
 
