@@ -103,8 +103,6 @@ export default function ModalAddCliente(props) {
       toast.success('Cliente cadastrado!');
       // props.onToggleModalCliente();
 
-
-      console.log(cliente)
       setCliente(cliente)
       props.onConfirmAdd();
 
