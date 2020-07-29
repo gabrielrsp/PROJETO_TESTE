@@ -20,8 +20,6 @@ import Button from '../../components/Button';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
-import logo from '../../assets/logo.svg';
-
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default function Clientes() {
@@ -95,10 +93,28 @@ export default function Clientes() {
     return dateFormatted;
   }
 
+  function formatTipoEndereco(tipo) {
+
+    let formatedTipo
+
+    switch (tipo) {
+      case '1':
+        formatedTipo = 'Residencial'
+        break;
+      case '2':
+        formatedTipo = 'Comercial'
+        break;
+      case '3':
+        formatedTipo = 'Cobrança'
+        break;
+    }
+
+    return formatedTipo
+  }
+
   function updateStateAdd() {
     setConfirmAdd(!confirmAdd);
   }
-
 
   const columns = [
 
@@ -169,6 +185,10 @@ export default function Clientes() {
           fontSize: 14,
           bold: true
         },
+        small: {
+          fontSize: 12,
+          bold: true
+        },
       }
     }
 
@@ -184,23 +204,21 @@ export default function Clientes() {
         text: 'Relatório de Clientes',
         style: 'subheader'
       },
-      '   _______________________________________________________________________________________________',
-      '         ',
-    ]
 
+    ]
 
     user.map(user => {
 
-      user.CLIENTE_E.map( endereco => { container.push(
-
-      ) })
-
       container.push(
 
+        '   _______________________________________________________________________________________________',
+        '         ',
+        '         ',
         {
-        text: `Cliente: ${user.CLI_NOME}`,
-        style: 'medium'
+          text: `Cliente: ${user.CLI_NOME}`,
+          style: 'medium'
         },
+
         {
           table: {
             widths: [120, 400],
@@ -214,59 +232,44 @@ export default function Clientes() {
           }
         },
 
-
         '         ',
-/*
-         	{
-          table: {
-            widths: [65, 95, 95, 85, 95, 50],
-            headerRows: 1,
-            body: [
-              [{ text: 'Endereços' }, { text: 'Logradouro' }, { text: 'Bairro' }, { text: 'CEP' }, { text: 'Cidade' }, { text: 'UF' }],
-              ['Residencial', ' ', '', '', '', ''],
-              ['Comercial', '', '', '', '', ''],
-              ['Cobrança', '', '', '', '', ''],
-
-            ]
-          },
-
-        },*/
-        '         ',
-        '   _______________________________________________________________________________________________',
-        '         ',
-        '         ',
-
-
       )
 
+      if (user.CLIENTE_E.length) {
 
+        user.CLIENTE_E.map(endereco => {
+          container.push(
+
+
+            {
+              text: `Endereço: `,
+              style: 'small'
+            },
+
+            {
+              table: {
+                widths: [65, 95, 95, 85, 95, 50],
+                headerRows: 1,
+                body: [
+                  [{ text: 'Tipo' }, { text: 'Logradouro' }, { text: 'Bairro' }, { text: 'CEP' }, { text: 'Cidade' }, { text: 'UF' }],
+                  [`${formatTipoEndereco(endereco.CLIE_TIPO)}`, `${endereco.CLIE_ENDERECO}`, `${endereco.CLIE_BAIRRO}`, `${endereco.CLIE_CEP}`, `${endereco.CLIE_CIDADE}`, `${endereco.CLIE_UF}`],
+                ]
+              },
+
+            },
+
+            '         ',
+            '         ',
+          )
+        })
+
+      }
 
     })
 
     return container
 
   }
-
-  /* *var docDefinition = {
-
-      content: [
-        {
-              table: {
-              widths: [120, 400],
-              body: [
-                ['Nome', ''],
-                ['ID', ''],
-                ['CPF', ''],
-                ['Fone', ''],
-                ['Data de Nascimento', ''],
-                ['Data de Cadastro', '']
-              ]
-            }
-          }
-        ]
-
-  }*/
-
 
   return (
     <>
@@ -282,8 +285,6 @@ export default function Clientes() {
         toggled={isToggled}
         closeSideBar={() => setIsToggled(false)}
       />
-
-
 
       <Container>
 
