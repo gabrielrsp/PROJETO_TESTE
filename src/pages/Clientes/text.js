@@ -21,20 +21,21 @@ var dd = {
     '         ',
     '         ',
     'Tabela de Endereços:',
-    {
-      style: 'tableExample',
-      table: {
-        widths: [100, '*', 100, '*'],
-        body: [
-            ['Endereços', 'Residencial', 'Comercial', 'Cobrança'],
-            ['Logradouro', {text: 'nothing interesting here'}, {text: 'g here'}, {text: 'ting here'}],
-            ['Bairro', {text: 'nothing interesting here'}, {text: 'g here'}, {text: 'ting here'}],
-            ['CEP', {text: 'nothing interesting here'}, {text: 'g here'}, {text: 'ting here'}],
-            ['Cidade', {text: 'nothing interesting here'}, {text: 'g here'}, {text: 'ting here'}],
-            ['UF',  {text: 'nothing interesting here'} , {text: 'g here'}, {text: 'ting here'}],
-        ]
-      }
-    },
+		{
+			style: 'tableExample',
+			table: {
+			    widths: [65, 95, 95, 85, 95, 50  ],
+				headerRows: 1,
+				body: [
+                    [{text: 'Endereços' }, {text: 'Logradouro'}, {text: 'Bairro'}, {text: 'CEP'}, {text: 'Cidade'}, {text: 'UF'}],
+					['Residencial', 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 4',  'Sample value 4' ],
+					['Comercial', 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 4', 'Sample value 4'    ],
+					['Cobrança', 'Sample value 2', 'Sample value 3', 'Sample value 4', 'Sample value 4', 'Sample value 4'     ],
+
+				]
+			},
+
+		}
   ]
 
 }

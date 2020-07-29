@@ -20,7 +20,9 @@ import Button from '../../components/Button';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import logo from '../../assets/logo.svg';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default function Clientes() {
 
@@ -87,6 +89,12 @@ export default function Clientes() {
     return dateFormatted;
   }
 
+  function formatDateToTable(data) {
+    const newDate = new Date(data.substring(0, 10));
+    const dateFormatted = format(newDate, 'dd/MM/yyyy');
+    return dateFormatted;
+  }
+
   function updateStateAdd() {
     setConfirmAdd(!confirmAdd);
   }
@@ -148,57 +156,116 @@ export default function Clientes() {
   };
 
   function generatePdf() {
-    console.log(user)
-    console.log(docDefinition)
-   // pdfMake.createPdf(docDefinition).open();
+
+    var docDefinition = {
+      content: formatPdf(),
+
+      styles: {
+        subheader: {
+          fontSize: 16,
+          bold: true
+        },
+        medium: {
+          fontSize: 14,
+          bold: true
+        },
+      }
+    }
+
+    pdfMake.createPdf(docDefinition).open();
+
   }
 
-  //const docUsers = user.forEach( user => return )
+  function formatPdf() {
 
+    let container = [
 
-  var docDefinition = {
-     content: [
-
+      {
+        text: 'Relatório de Clientes',
+        style: 'subheader'
+      },
+      '   _______________________________________________________________________________________________',
       '         ',
-      'Cliente: João',
-         {
-           style: 'tableExample',
-           table: {
-              widths: [120, 400],
-             body: [
-               ['ID', ''],
-               ['CPF', ''],
-               ['Fone', ''],
-               ['Data de Nascimento', ''],
-               ['Data de Cadastro', '']
-             ]
-           }
-         },
-         '         ',
-         '         ',
-         'Endereços:',
-         {
-           style: 'tableExample',
-           table: {
-             widths: [100, 134, 134, 134],
-             body: [
-                 ['Endereços', 'Residencial', 'Comercial', 'Cobrança'],
-                 ['Logradouro', {text: ''}, {text: ''}, {text: ''}],
-                 ['Bairro', {text: ''}, {text: ''}, {text: ''}],
-                 ['CEP', {text: ''}, {text: ''}, {text: ''}],
-                 ['Cidade', {text: ''}, {text: ''}, {text: ''}],
-                 ['UF',  {text: ''} , {text: ''}, {text: ''}],
-             ]
-           }
-         },
-         '         ',
-         '         ',
-         '   _______________________________________________________________________________________________',
-         '         ',
-         '         ',
+    ]
 
-       ]
+
+    user.map(user => {
+
+      user.CLIENTE_E.map( endereco => { container.push(
+
+      ) })
+
+      container.push(
+
+        {
+        text: `Cliente: ${user.CLI_NOME}`,
+        style: 'medium'
+        },
+        {
+          table: {
+            widths: [120, 400],
+            body: [
+              ['ID', `${user.CLI_ID}`],
+              ['CPF', `${user.CLI_CNPJ_CPF}`],
+              ['Fone', `${user.CLI_FONE}`],
+              ['Data de Nascimento', `${formatDateToTable(user.CLI_DATANASC)}`],
+              ['Data de Cadastro', `${formatDateToTable(user.CLI_DATACAD)}`]
+            ]
+          }
+        },
+
+
+        '         ',
+/*
+         	{
+          table: {
+            widths: [65, 95, 95, 85, 95, 50],
+            headerRows: 1,
+            body: [
+              [{ text: 'Endereços' }, { text: 'Logradouro' }, { text: 'Bairro' }, { text: 'CEP' }, { text: 'Cidade' }, { text: 'UF' }],
+              ['Residencial', ' ', '', '', '', ''],
+              ['Comercial', '', '', '', '', ''],
+              ['Cobrança', '', '', '', '', ''],
+
+            ]
+          },
+
+        },*/
+        '         ',
+        '   _______________________________________________________________________________________________',
+        '         ',
+        '         ',
+
+
+      )
+
+
+
+    })
+
+    return container
+
   }
+
+  /* *var docDefinition = {
+
+      content: [
+        {
+              table: {
+              widths: [120, 400],
+              body: [
+                ['Nome', ''],
+                ['ID', ''],
+                ['CPF', ''],
+                ['Fone', ''],
+                ['Data de Nascimento', ''],
+                ['Data de Cadastro', '']
+              ]
+            }
+          }
+        ]
+
+  }*/
 
 
   return (
@@ -242,7 +309,7 @@ export default function Clientes() {
           </Button>
 
           <Button type="button" onClick={generatePdf}>
-          <FaFilePdf color='#4E2A77' size='18px' />
+            <FaFilePdf color='#4E2A77' size='18px' />
             <span>Gerar Relatorio</span>
           </Button>
 

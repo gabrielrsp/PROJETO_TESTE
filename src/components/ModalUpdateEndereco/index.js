@@ -160,7 +160,6 @@ export default function ModalUpdateEndereco(props) {
       //Apenas Modifica um cadastro já existente
       await api.put('v1/cadastro', endereco);
 
-      console.log('VERIFICAR ALTERAÇÃO NA API')
       props.returnEndereco(endereco);
       props.onToggleModalEndereco();
 
