@@ -121,8 +121,8 @@ export default function ModalAddEndereco(props) {
       await api.post('v1/cadastro', endereco);
 
       props.returnEndereco(endereco);
+      props.onConfirmAdd();
       props.onToggleModalEndereco();
-
 
 
     }

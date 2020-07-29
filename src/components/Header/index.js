@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaBars } from "react-icons/fa";
 import { Container, Wrapper } from './styles';
-import logo from '../../assets/logo.svg';
+import logoSaib from '../../assets/logoSaib.svg';
 
 export default function Header(props) {
 
@@ -15,7 +15,7 @@ export default function Header(props) {
             <h3>{props.children}</h3>
           </div>
 
-          <img src={logo} alt="saib" width="135px" style={{ marginTop: '0px', marginLeft: '10px' }} />
+          <img src={logoSaib} alt="saib" width="135px" style={{ marginTop: '0px', marginLeft: '10px' }} />
         </Wrapper>
 
         <div style={{ textAlign: '-webkit-center' }} >

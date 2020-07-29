@@ -161,7 +161,7 @@ export default function ModalUpdateEndereco(props) {
       await api.put('v1/cadastro', endereco);
 
       props.returnEndereco(endereco);
-      props.onToggleModalEndereco();
+      props.closeModalEndereço();
 
 
     }
@@ -176,7 +176,6 @@ export default function ModalUpdateEndereco(props) {
     }
 
   }
-
 
   return (
 

@@ -101,7 +101,7 @@ export default function ModalAddCliente(props) {
       await api.post('/v1/cadastro', enderecoPost);
 
       toast.success('Cliente cadastrado!');
-      // props.onToggleModalCliente();
+      props.onToggleModalCliente();
 
       setCliente(cliente)
       props.onConfirmAdd();
@@ -124,11 +124,6 @@ export default function ModalAddCliente(props) {
 
 
   const toggleModalUpdateEndereco = useCallback(() => {
-    /*
-    if (!window.enderecoCheckBox || window.enderecoCheckBox.length === 0) {
-      toast.error("Selecione um endereço para alterar")
-      return
-    }*/
     toggleOverlay()
     setModalEndereco(false)
     setModalEndereco(true)
@@ -144,14 +139,11 @@ export default function ModalAddCliente(props) {
     loadUsers();
   }, [cliente, endereco, confirmAdd, idClick])
 
-
   const rowData = endereco || [];
-
 
   function updateState() {
     setConfirmAdd(!confirmAdd);
   }
-
 
   const formatTipoEndereco = (params) => {
     const { value } = params;

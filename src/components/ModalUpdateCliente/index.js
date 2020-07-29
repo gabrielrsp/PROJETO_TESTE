@@ -93,6 +93,7 @@ export default function ModalUpdateCliente(props) {
     toggleOverlay()
     setAddModal(!addModal)
     setUpdateModal(false)
+    setConfirmAdd()
   }, [addModal, toggleOverlay]);
 
   const toggleModalUpdateEndereco = useCallback(() => {
@@ -104,6 +105,18 @@ export default function ModalUpdateCliente(props) {
     toggleOverlay()
     setAddModal(false)
     setUpdateModal(true)
+    setConfirmAdd()
+  }, [toggleOverlay]);
+
+
+  const closeModalEndereço = useCallback(() => {
+
+    setAddModal(false)
+    setUpdateModal(false)
+    updateStateEndereco()
+    window.enderecoCheckBox = 0
+
+    setConfirmAdd(!confirmAdd)
   }, [toggleOverlay]);
 
 
@@ -147,7 +160,6 @@ export default function ModalUpdateCliente(props) {
     setConfirmAdd(!confirmAdd);
 
   }
-
 
   const formatTipoEndereco = (params) => {
     const { value } = params;
@@ -216,8 +228,6 @@ export default function ModalUpdateCliente(props) {
     const novoEndereco = endereco.filter(endereco => endereco.CLIE_ID !== docs.CLIE_ID)
 
     setEndereco([...novoEndereco, docs])
-
-
 
   }
 
@@ -321,14 +331,14 @@ export default function ModalUpdateCliente(props) {
         <div style={{ display: 'flex', marginTop: '10px', marginBottom: '25px', marginLeft: '20px' }}>
 
 
-        { !endereco.length ?
-          <Button type="submit" onClick={toggleModalAddEndereco} >
-            <FaPlusCircle color='#4E2A77' size='18px' />
-            <span>Novo Endereço</span>
-          </Button>
+          {!endereco.length ?
+            <Button type="submit" onClick={toggleModalAddEndereco} >
+              <FaPlusCircle color='#4E2A77' size='18px' />
+              <span>Novo Endereço</span>
+            </Button>
 
-        : <></>
-        }
+            : <></>
+          }
 
           {endereco.length ?
             <Button type="submit" onClick={toggleModalUpdateEndereco} >
@@ -386,6 +396,7 @@ export default function ModalUpdateCliente(props) {
                 returnEndereco={newEndereco => updateStateEndereco(newEndereco)}
                 onToggleModalEndereco={toggleModalUpdateEndereco}
                 onConfirmAdd={updateStateAdd}
+                onCloseModal={closeModalEndereço}
               />
             </Overlay>
           </>

@@ -20,6 +20,9 @@ import Button from '../../components/Button';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 
+import logoSaib from '../../assets/logoSaib.svg';
+import logo from '../../assets/logo.js';
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default function Clientes() {
@@ -174,12 +177,24 @@ export default function Clientes() {
   function generatePdf() {
 
     var docDefinition = {
+
+      header: {
+        alignment: 'left',
+        margin: [20, 20, 10, 20],
+        svg: logo(),
+        fit: [100, 50]
+
+      },
+
+      pageMargins: [ 40, 60, 40, 80 ] ,
+
       content: formatPdf(),
 
       styles: {
         subheader: {
           fontSize: 16,
-          bold: true
+          bold: true,
+          margin: [0, 20, 0, 10],
         },
         medium: {
           fontSize: 14,
@@ -189,20 +204,29 @@ export default function Clientes() {
           fontSize: 12,
           bold: true
         },
+
+        table: {
+          margin: [0, 10, 0, 20],
+          widths: [65, 95, 95, 85, 95, 50],
+        }
       }
     }
-
     pdfMake.createPdf(docDefinition).open();
-
   }
 
   function formatPdf() {
 
     let container = [
 
+
+      '         ',
+
       {
         text: 'Relatório de Clientes',
-        style: 'subheader'
+        style: 'subheader',
+        alignment: 'left',
+
+
       },
 
     ]
@@ -220,6 +244,7 @@ export default function Clientes() {
         },
 
         {
+          style: 'table',
           table: {
             widths: [120, 400],
             body: [
@@ -231,7 +256,6 @@ export default function Clientes() {
             ]
           }
         },
-
         '         ',
       )
 
@@ -240,15 +264,16 @@ export default function Clientes() {
         user.CLIENTE_E.map(endereco => {
           container.push(
 
-
             {
               text: `Endereço: `,
               style: 'small'
             },
 
             {
+              style: 'table',
               table: {
-                widths: [65, 95, 95, 85, 95, 50],
+                alignment: 'left',
+
                 headerRows: 1,
                 body: [
                   [{ text: 'Tipo' }, { text: 'Logradouro' }, { text: 'Bairro' }, { text: 'CEP' }, { text: 'Cidade' }, { text: 'UF' }],
@@ -262,7 +287,6 @@ export default function Clientes() {
             '         ',
           )
         })
-
       }
 
     })
@@ -294,19 +318,9 @@ export default function Clientes() {
             <span>Novo Cliente</span>
           </Button>
 
-          <Button >
-            <FaExternalLinkAlt color='#4E2A77' size='18px' />
-            <span>Visualizar Informações</span>
-          </Button>
-
           <Button onClick={toggleUpdateModalCliente}>
             <FaEdit color='#4E2A77' size='18px' />
             <span>Alterar Cadastro</span>
-          </Button>
-
-          <Button >
-            <FaSearch color='#4E2A77' size='18px' />
-            <span>Pesquisar Cliente</span>
           </Button>
 
           <Button type="button" onClick={generatePdf}>
